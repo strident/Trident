@@ -12,7 +12,7 @@
 namespace Trident\Component\DependencyInjection;
 
 use Phimple\Container;
-use Strident\Component\DependencyInjection\ContainerAwareInterface;
+use Trident\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * Container Aware
