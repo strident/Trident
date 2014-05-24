@@ -40,7 +40,7 @@ abstract class AbstractModule
 
     public function boot(Container $container)
     {
-        $this->registerRoutes($container['route_collection']);
+        $this->registerRoutes($container->get('route_collection'));
     }
 
     /**

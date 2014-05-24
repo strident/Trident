@@ -152,7 +152,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      */
     public function getDispatcher()
     {
-        return $this->container['event_dispatcher'];
+        return $this->container->get('event_dispatcher');
     }
 
     /**
@@ -162,7 +162,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      */
     public function getHttpKernel()
     {
-        return $this->container['http_kernel'];
+        return $this->container->get('http_kernel');
     }
 
     /**
@@ -231,10 +231,10 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     public function prepareContainer(Container $container)
     {
         foreach ($this->getKernelParameters() as $key => $value) {
-            $container["%$key%"] = $value;
+            $container[$key] = $value;
         }
 
-        $container['kernel'] = $this;
+        $container->set('kernel', $this);
 
         foreach ($this->modules as $module) {
             $module->registerServices($container);
