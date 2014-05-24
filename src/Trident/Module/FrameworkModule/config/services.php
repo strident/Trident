@@ -23,9 +23,9 @@ return function($container) {
     });
 
     $container->set('http_kernel', function($c) {
-        $dispatcher   = $c['event_dispatcher'];
-        $resolver     = $c['controller_resolver'];
-        $requestStack = $c['request_stack'];
+        $dispatcher   = $c->get('event_dispatcher');
+        $resolver     = $c->get('controller_resolver');
+        $requestStack = $c->get('request_stack');
 
         return new $c['http_kernel.class']($dispatcher, $resolver, $requestStack);
     });
@@ -39,7 +39,7 @@ return function($container) {
     });
 
     $container->set('listener.router', function($c) {
-        $routes  = $c['route_collection'];
+        $routes  = $c->get('route_collection');
         $context = new Symfony\Component\Routing\RequestContext();
         $matcher = new Symfony\Component\Routing\Matcher\UrlMatcher($routes, $context);
 
@@ -57,9 +57,9 @@ return function($container) {
 
     // Extensions
     $container->extend('event_dispatcher', function($dispatcher, $c) {
-        $dispatcher->addSubscriber($c['listener.exception']);
-        $dispatcher->addSubscriber($c['listener.response']);
-        $dispatcher->addSubscriber($c['listener.router']);
+        $dispatcher->addSubscriber($c->get('listener.exception'));
+        $dispatcher->addSubscriber($c->get('listener.response'));
+        $dispatcher->addSubscriber($c->get('listener.router'));
 
         return $dispatcher;
     });
