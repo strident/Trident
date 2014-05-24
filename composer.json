@@ -1,0 +1,24 @@
+{
+    "name": "strident/trident",
+    "type": "library",
+    "description": "The Trident PHP Framework",
+    "keywords": ["framework"],
+    "homepage": "http://strident.io",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Elliot Wright",
+            "email": "wright.elliot@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "doctrine/common": "~2.2",
+        "psr/log": "~1.0",
+        "strident/phimple": "2.0.*"
+    },
+    "autoload": {
+        "psr-0": { "Trident\\": "src/" }
+    },
+    "minimum-stability": "dev"
+}
