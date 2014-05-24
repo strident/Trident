@@ -2,15 +2,15 @@
 
 return function($container) {
     // Parameters
-    $container['controller_resolver.class'] = 'Strident\\Component\\HttpKernel\\Controller\\ControllerResolver';
+    $container['controller_resolver.class'] = 'Trident\\Component\\HttpKernel\\Controller\\ControllerResolver';
     $container['event_dispatcher.class']    = 'Symfony\\Component\\EventDispatcher\\EventDispatcher';
+    $container['exception_controller']      = 'Trident\\Module\\FrameworkModule\\Controller\\ExceptionController::exceptionAction';
     $container['http_kernel.class']         = 'Symfony\\Component\\HttpKernel\\HttpKernel';
-    $container['request_stack.class']       = 'Symfony\\Component\\HttpFoundation\\RequestStack';
-    $container['route_collection.class']    = 'Symfony\\Component\\Routing\\RouteCollection';
     $container['listener.exception.class']  = 'Symfony\\Component\\HttpKernel\\EventListener\\ExceptionListener';
     $container['listener.response.class']   = 'Symfony\\Component\\HttpKernel\\EventListener\\ResponseListener';
     $container['listener.router.class']     = 'Symfony\\Component\\HttpKernel\\EventListener\\RouterListener';
-    $container['exception_controller']      = 'Strident\\Module\\FrameworkModule\\Controller\\ExceptionController::exceptionAction';
+    $container['request_stack.class']       = 'Symfony\\Component\\HttpFoundation\\RequestStack';
+    $container['route_collection.class']    = 'Symfony\\Component\\Routing\\RouteCollection';
 
 
     // Services
