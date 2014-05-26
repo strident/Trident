@@ -3,7 +3,7 @@
     "type": "library",
     "description": "The Trident PHP Framework",
     "keywords": ["framework"],
-    "homepage": "http://strident.io",
+    "homepage": "http://strident.io/trident",
     "license": "MIT",
     "authors": [
         {
