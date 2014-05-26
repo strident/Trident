@@ -17,6 +17,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Framework Module
+ *
+ * @author Elliot Wright <elliot@elliotwright.co>
  */
 class TridentFrameworkModule extends AbstractModule
 {

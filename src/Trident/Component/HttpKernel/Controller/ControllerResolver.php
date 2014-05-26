@@ -18,6 +18,8 @@ use Trident\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * Controller Resolver
+ *
+ * @author Elliot Wright <elliot@elliotwright.co>
  */
 class ControllerResolver extends BaseControllerResolver
 {

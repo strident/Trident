@@ -17,6 +17,8 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Response Event
+ *
+ * @author Elliot Wright <elliot@elliotwright.co>
  */
 class ResponseEvent extends Event
 {

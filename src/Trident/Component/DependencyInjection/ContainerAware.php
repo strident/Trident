@@ -16,6 +16,8 @@ use Trident\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * Container Aware
+ *
+ * @author Elliot Wright <elliot@elliotwright.co>
  */
 abstract class ContainerAware implements ContainerAwareInterface
 {

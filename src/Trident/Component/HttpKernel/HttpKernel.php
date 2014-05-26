@@ -21,6 +21,8 @@ use Trident\Component\HttpKernel\Event\ResponseEvent;
 
 /**
  * Trident HTTP Kernel
+ *
+ * @author Elliot Wright <elliot@elliotwright.co>
  */
 class HttpKernel implements HttpKernelInterface, TerminableInterface
 {

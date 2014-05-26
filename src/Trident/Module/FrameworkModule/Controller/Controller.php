@@ -11,21 +11,17 @@
 
 namespace Trident\Module\FrameworkModule\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Trident\Component\DependencyInjection\ContainerAware;
 
 /**
- * Exception Controller
+ * Base Controller
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class ExceptionController extends ContainerAware
+class Controller extends ContainerAware
 {
-    public function exceptionAction(FlattenException $exception)
+    public function render($view, array $parameters = null, Response $repsonse = null)
     {
-        $msg = 'Something went wrong! ('.$exception->getMessage().')';
-
-        return new Response($msg, $exception->getStatusCode());
+        // return $this->container->get('templating');
     }
 }

@@ -16,6 +16,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Abstract Module
+ *
+ * @author Elliot Wright <elliot@elliotwright.co>
  */
 abstract class AbstractModule
 {

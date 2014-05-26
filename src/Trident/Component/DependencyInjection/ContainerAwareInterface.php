@@ -15,6 +15,8 @@ use Phimple\Container;
 
 /**
  * Container Aware Interface
+ *
+ * @author Elliot Wright <elliot@elliotwright.co>
  */
 interface ContainerAwareInterface
 {
