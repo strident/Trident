@@ -15,7 +15,8 @@
         "php": ">=5.5.9",
         "doctrine/common": "~2.2",
         "psr/log": "~1.0",
-        "strident/phimple": "2.0.*"
+        "strident/phimple": "2.0.*",
+        "twig/twig": "1.15.*"
     },
     "autoload": {
         "psr-0": { "Trident\\": "src/" }

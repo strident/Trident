@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Trident\Module\FrameworkModule;
+namespace Trident\Module\TemplatingModule;
 
-use Trident\Component\HttpKernel\Module\AbstractModule;
 use Phimple\Container;
 use Symfony\Component\Routing\RouteCollection;
+use Trident\Component\HttpKernel\Module\AbstractModule;
 
 /**
  * Framework Module
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class TridentFrameworkModule extends AbstractModule
+class TridentTemplatingModule extends AbstractModule
 {
     /**
      * {@inheritDoc}
