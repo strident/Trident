@@ -78,7 +78,7 @@ class HttpKernel implements HttpKernelInterface
 
         $response = call_user_func_array($controller, $arguments);
 
-        if (!$response instanceof Response) {
+        if ( ! $response instanceof Response) {
             $message = sprintf('The controller must return a response (%s given).', $this->varToString($response));
 
             if (null === $response) {
