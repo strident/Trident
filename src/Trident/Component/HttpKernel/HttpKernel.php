@@ -165,6 +165,11 @@ class HttpKernel implements HttpKernelInterface
         // return $this->container->get('event_dispatcher');
     }
 
+    public function getModule($name)
+    {
+        return $this->modules[$name];
+    }
+
     /**
      * Initialise the modules, register them in the kernel
      *

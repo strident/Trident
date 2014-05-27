@@ -46,6 +46,18 @@ abstract class AbstractModule
     }
 
     /**
+     * Get root directory of module
+     *
+     * @return string
+     */
+    public function getRootDir()
+    {
+        $reflection = new \ReflectionClass($this);
+
+        return dirname($reflection->getFileName());
+    }
+
+    /**
      * Returns the bundle name (the class short name).
      *
      * @return string
