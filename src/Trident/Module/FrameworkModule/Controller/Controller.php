@@ -11,6 +11,7 @@
 
 namespace Trident\Module\FrameworkModule\Controller;
 
+use Phalcon\Http\Response;
 use Trident\Component\DependencyInjection\ContainerAware;
 
 /**

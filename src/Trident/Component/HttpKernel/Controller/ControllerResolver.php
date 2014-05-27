@@ -11,9 +11,9 @@
 
 namespace Trident\Component\HttpKernel\Controller;
 
+use Phalcon\Http\Request;
 use Phimple\Container;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
 use Trident\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
@@ -21,7 +21,7 @@ use Trident\Component\DependencyInjection\ContainerAwareInterface;
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class ControllerResolver extends BaseControllerResolver
+class ControllerResolver
 {
     protected $container;
 
@@ -37,7 +37,32 @@ class ControllerResolver extends BaseControllerResolver
     }
 
     /**
-     * {@inheritDoc}
+     * Get a callable controller
+     *
+     * @param  Request $request
+     * @param  array   $matched
+     * @return callable
+     */
+    public function getController(Request $request, array $matched)
+    {
+        if ( ! $controller = $matched['_controller']) {
+            throw new \InvalidArgumentException('Unable to look for controller as the "_controller" parameter is missing');
+        }
+
+        $callable = $this->createController($controller);
+
+        if ( ! is_callable($callable)) {
+            throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', $controller, $request));
+        }
+
+        return $callable;
+    }
+
+    /**
+     * Creates the callable from the controller string
+     *
+     * @param  string $controller
+     * @return callable
      */
     protected function createController($controller)
     {
@@ -57,5 +82,32 @@ class ControllerResolver extends BaseControllerResolver
         }
 
         return array($controller, $method);
+    }
+
+    /**
+     * Get controller action arguments
+     *
+     * @param  Request $request
+     * @param  array   $controller
+     * @param  array   $matched
+     * @return array
+     */
+    public function getArguments(Request $request, array $controller, array $matched)
+    {
+        $reflection = new \ReflectionMethod($controller[0], $controller[1]);
+        $arguments  = [];
+
+        foreach ($reflection->getParameters() as $param) {
+            if (array_key_exists($param->name, $matched)) {
+                $arguments[] = $matched[$param->name];
+            } elseif ($param->isDefaultValueAvailable()) {
+                $arguments[] = $param->getDefaultValue();
+            } else {
+                $controller = sprintf('%s::%s()', get_class($controller[0]), $controller[1]);
+                throw new \RuntimeException(sprintf('Controller "%s" requires that you provide a value for the "$%s" argument (either because there is no default value, or because there is a non-optional argument after this one).', $controller, $param->name));
+            }
+        }
+
+        return $arguments;
     }
 }

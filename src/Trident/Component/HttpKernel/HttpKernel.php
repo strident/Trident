@@ -12,11 +12,9 @@
 namespace Trident\Component\HttpKernel;
 
 use Phimple\Container;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernel as SymfonyHttpKernel;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\TerminableInterface;
+use Phalcon\Http\Request;
+use Phalcon\Http\Response;
+use Trident\Component\HttpKernel\HttpKernelInterface;
 use Trident\Component\HttpKernel\Event\ResponseEvent;
 
 /**
@@ -24,13 +22,14 @@ use Trident\Component\HttpKernel\Event\ResponseEvent;
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class HttpKernel implements HttpKernelInterface, TerminableInterface
+class HttpKernel implements HttpKernelInterface
 {
     protected $booted = false;
     protected $container;
     protected $debug;
     protected $modules;
     protected $name;
+    protected $request;
     protected $rootDir;
     protected $startTime;
 
@@ -62,11 +61,34 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
+        $this->request = $request;
+
         if (false === $this->booted) {
             $this->boot();
         }
 
-        return $this->getHttpKernel()->handle($request, $type, $catch);
+        $matcher  = $this->container->get('route_matcher');
+        $resolver = $this->container->get('controller_resolver');
+
+        $path    = parse_url($request->getURI(), PHP_URL_PATH);
+        $matched = $matcher->match($path);
+
+        $controller = $resolver->getController($request, $matched);
+        $arguments  = $resolver->getArguments($request, $controller, $matched);
+
+        $response = call_user_func_array($controller, $arguments);
+
+        if (!$response instanceof Response) {
+            $message = sprintf('The controller must return a response (%s given).', $this->varToString($response));
+
+            if (null === $response) {
+                $message .= ' Did you forget to add a return statement somewhere in your controller?';
+            }
+
+            throw new \LogicException($message);
+        }
+
+        return $response;
     }
 
     /**
@@ -82,20 +104,6 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         }
 
         $this->booted = true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function terminate(Request $request, Response $response)
-    {
-        if (false === $this->booted) {
-            return;
-        }
-
-        if ($this->getHttpKernel() instanceof TerminableInterface) {
-            $this->getHttpKernel()->terminate($request, $response);
-        }
     }
 
     /**
@@ -154,17 +162,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      */
     public function getDispatcher()
     {
-        return $this->container->get('event_dispatcher');
-    }
-
-    /**
-     * Get HttpKernel
-     *
-     * @return SymfonyHttpKernel
-     */
-    public function getHttpKernel()
-    {
-        return $this->container->get('http_kernel');
+        // return $this->container->get('event_dispatcher');
     }
 
     /**
@@ -181,7 +179,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
             $name = $module->getName();
 
             if (isset($this->modules[$name])) {
-                throw new \LogicException(sprintf('Trying to register two bundles with the same name "%s"', $name));
+                throw new \LogicException(sprintf('Trying to register two modules with the same name "%s"', $name));
             }
 
             $this->modules[$module->getName()] = $module;
@@ -237,10 +235,45 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         }
 
         $container->set('kernel', $this);
+        $container->set('request', $this->request);
 
         foreach ($this->modules as $module) {
             $module->registerServices($container);
         }
+    }
+
+    private function varToString($var)
+    {
+        if (is_object($var)) {
+            return sprintf('Object(%s)', get_class($var));
+        }
+
+        if (is_array($var)) {
+            $a = array();
+            foreach ($var as $k => $v) {
+                $a[] = sprintf('%s => %s', $k, $this->varToString($v));
+            }
+
+            return sprintf("Array(%s)", implode(', ', $a));
+        }
+
+        if (is_resource($var)) {
+            return sprintf('Resource(%s)', get_resource_type($var));
+        }
+
+        if (null === $var) {
+            return 'null';
+        }
+
+        if (false === $var) {
+            return 'false';
+        }
+
+        if (true === $var) {
+            return 'true';
+        }
+
+        return (string) "'$var'";
     }
 
     /**

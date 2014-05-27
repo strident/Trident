@@ -11,9 +11,9 @@
 
 namespace Trident\Module\FrameworkModule;
 
-use Trident\Component\HttpKernel\Module\AbstractModule;
 use Phimple\Container;
 use Symfony\Component\Routing\RouteCollection;
+use Trident\Component\HttpKernel\Module\AbstractModule;
 
 /**
  * Framework Module
