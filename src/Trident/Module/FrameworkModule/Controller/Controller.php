@@ -25,4 +25,16 @@ class Controller extends ContainerAware
     {
         // return $this->container->get('templating');
     }
+
+    /**
+     * Return service with given name
+     *
+     * @param  string $name
+     *
+     * @return mixed
+     */
+    public function get($name)
+    {
+        return $this->container->get($name);
+    }
 }

@@ -14,17 +14,19 @@ namespace Trident\Component\HttpKernel;
 use Phimple\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Trident\Component\Configuration\Configuration;
 use Trident\Component\HttpKernel\HttpKernelInterface;
 use Trident\Component\HttpKernel\Event\ResponseEvent;
 
 /**
- * Trident HTTP Kernel
+ * Abstract Kernel
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class HttpKernel implements HttpKernelInterface
+abstract class AbstractKernel implements HttpKernelInterface
 {
     protected $booted = false;
+    protected $configuration = [];
     protected $container;
     protected $debug;
     protected $modules;
@@ -96,6 +98,7 @@ class HttpKernel implements HttpKernelInterface
      */
     public function boot()
     {
+        $this->initialiseConfiguration();
         $this->initialiseModules();
         $this->initialiseContainer();
 
@@ -105,6 +108,22 @@ class HttpKernel implements HttpKernelInterface
 
         $this->booted = true;
     }
+
+    /**
+     * Register configuration
+     *
+     * @param  string $environment
+     * @return array
+     */
+    abstract public function registerConfiguration($environment);
+
+    /**
+     * Register modules
+     *
+     * @param  string $environment
+     * @return array
+     */
+    abstract public function registerModules($environment);
 
     /**
      * {@inheritdoc}
@@ -168,6 +187,35 @@ class HttpKernel implements HttpKernelInterface
     public function getModule($name)
     {
         return $this->modules[$name];
+    }
+
+    /**
+     * Initialise the application configuration
+     *
+     * @return Configuration
+     */
+    public function initialiseConfiguration()
+    {
+        $configuration = $this->registerConfiguration(false);
+
+        if ( ! is_array($configuration)) {
+            throw new \RuntimeException(sprintf(
+                'The configuration must be a valid array (%s given).',
+                $this->varToString($configuration)
+            ));
+        }
+
+        return $this->configuration = new Configuration($configuration);
+    }
+
+    /**
+     * Get configuration
+     *
+     * @return Configuration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
     }
 
     /**
@@ -240,6 +288,7 @@ class HttpKernel implements HttpKernelInterface
         }
 
         $container->set('kernel', $this);
+        $container->set('configuration', $this->configuration);
         $container->set('request', $this->request);
 
         foreach ($this->modules as $module) {
