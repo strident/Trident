@@ -11,9 +11,9 @@
 
 namespace Trident\Component\HttpKernel\Controller;
 
-use Phalcon\Http\Request;
 use Phimple\Container;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Trident\Component\DependencyInjection\ContainerAwareInterface;
 
 /**

@@ -12,8 +12,8 @@
 namespace Trident\Component\HttpKernel;
 
 use Phimple\Container;
-use Phalcon\Http\Request;
-use Phalcon\Http\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Trident\Component\HttpKernel\HttpKernelInterface;
 use Trident\Component\HttpKernel\Event\ResponseEvent;
 
@@ -79,7 +79,7 @@ class HttpKernel implements HttpKernelInterface
         $response = call_user_func_array($controller, $arguments);
 
         if ( ! $response instanceof Response) {
-            $message = sprintf('The controller must return a response (%s given).', $this->varToString($response));
+            $message = sprintf('The controller must return a valid Response (%s given).', $this->varToString($response));
 
             if (null === $response) {
                 $message .= ' Did you forget to add a return statement somewhere in your controller?';
