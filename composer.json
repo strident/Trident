@@ -17,6 +17,7 @@
         "psr/log": "~1.0",
         "strident/phimple": "2.0.*",
         "symfony/filesystem": "2.4.*",
+        "symfony/http-foundation": "2.4.*",
         "symfony/routing": "2.4.*",
         "twig/twig": "1.15.*"
     },
