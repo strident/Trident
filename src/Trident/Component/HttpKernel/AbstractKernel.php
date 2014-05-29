@@ -29,6 +29,7 @@ abstract class AbstractKernel implements HttpKernelInterface
     protected $configuration = [];
     protected $container;
     protected $debug;
+    protected $environment;
     protected $modules;
     protected $name;
     protected $request;
@@ -47,11 +48,12 @@ abstract class AbstractKernel implements HttpKernelInterface
      *
      * @param boolean $debug Whether debugging is enabled or not
      */
-    public function __construct($debug)
+    public function __construct($environment, $debug)
     {
-        $this->debug   = (bool) $debug;
-        $this->rootDir = $this->getRootDir();
-        $this->name    = $this->getName();
+        $this->debug       = (bool) $debug;
+        $this->environment = $environment;
+        $this->rootDir     = $this->getRootDir();
+        $this->name        = $this->getName();
 
         if ($this->debug) {
             $this->startTime = microtime(true);
@@ -196,7 +198,7 @@ abstract class AbstractKernel implements HttpKernelInterface
      */
     public function initialiseConfiguration()
     {
-        $configuration = $this->registerConfiguration(false);
+        $configuration = $this->registerConfiguration($this->environment);
 
         if ( ! is_array($configuration)) {
             throw new \RuntimeException(sprintf(
@@ -228,7 +230,7 @@ abstract class AbstractKernel implements HttpKernelInterface
         $this->modules = array();
 
         // @todo: environments!
-        foreach ($this->registerModules(null) as $module) {
+        foreach ($this->registerModules($this->environment) as $module) {
             $name = $module->getName();
 
             if (isset($this->modules[$name])) {
@@ -338,12 +340,13 @@ abstract class AbstractKernel implements HttpKernelInterface
     public function getKernelParameters()
     {
         return [
-            'kernel.debug'     => $this->debug,
-            'kernel.cache_dir' => $this->getCacheDir(),
-            'kernel.charset'   => $this->getCharset(),
-            'kernel.logs_dir'  => $this->getLogDir(),
-            'kernel.name'      => $this->getName(),
-            'kernel.root_dir'  => $this->getRootDir(),
+            'kernel.debug'       => $this->debug,
+            'kernel.environment' => $this->environment,
+            'kernel.cache_dir'   => $this->getCacheDir(),
+            'kernel.charset'     => $this->getCharset(),
+            'kernel.logs_dir'    => $this->getLogDir(),
+            'kernel.name'        => $this->getName(),
+            'kernel.root_dir'    => $this->getRootDir(),
         ];
     }
 }

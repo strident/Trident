@@ -11,10 +11,14 @@
 
 namespace Trident\Component\Templating;
 
+use Symfony\Component\HttpFoundation\Response;
 use Trident\Component\Templating\Engine\EngineInterface;
 
 /**
  * Template Engine Wrapper
+ *
+ * Transform a template into a response, or modify a response that's been
+ * prepared already.
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
@@ -28,11 +32,17 @@ class Templating
      * @param  string $template
      * @param  array  $parameters
      *
-     * @return string
+     * @return Response
      */
-    public function render($template, array $parameters)
+    public function render($template, array $parameters = null, Response $response = null)
     {
-        return $this->engine->render($template, $parameters);
+        if ( ! $response instanceof Response) {
+            $response = new Response();
+        }
+
+        $response->setContent($this->engine->render($template, $parameters));
+
+        return $response;
     }
 
     /**

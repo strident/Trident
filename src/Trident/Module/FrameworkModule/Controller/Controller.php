@@ -11,7 +11,7 @@
 
 namespace Trident\Module\FrameworkModule\Controller;
 
-use Phalcon\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 use Trident\Component\DependencyInjection\ContainerAware;
 
 /**
@@ -21,9 +21,9 @@ use Trident\Component\DependencyInjection\ContainerAware;
  */
 class Controller extends ContainerAware
 {
-    public function render($view, array $parameters = null, Response $repsonse = null)
+    public function render($view, array $parameters = null, Response $response = null)
     {
-        // return $this->container->get('templating');
+        return $this->container->get('templating')->render($view, $parameters, $response);
     }
 
     /**
