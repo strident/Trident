@@ -15,6 +15,6 @@ return function($container) {
             'user'     => $appConfig->get('database.default.username'),
             'password' => $appConfig->get('database.default.password'),
             'dbname'   => $appConfig->get('database.default.database'),
-        ], $config);
+        ], $ormConfig);
     });
 };
