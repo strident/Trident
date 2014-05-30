@@ -14,8 +14,8 @@
     "require": {
         "php": ">=5.5.3",
         "doctrine/common": "2.4.2",
-        "doctrine/dbal": "dev-master",
-        "doctrine/orm": "dev-master",
+        "doctrine/dbal": "2.4.2",
+        "doctrine/orm": "2.4.2",
         "psr/log": "~1.0",
         "strident/phimple": "2.0.*",
         "symfony/filesystem": "2.4.*",

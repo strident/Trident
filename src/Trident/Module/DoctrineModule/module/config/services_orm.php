@@ -24,17 +24,16 @@ return function($container) {
         $ormConfig = $c['doctrine.orm.tools_setup.class']::createAnnotationMetadataConfiguration([], false);
         $ormConfig->setMetadataDriverImpl($c->get('doctrine.annotations.driver'));
 
-
         // This needs to be abstracted, and configurable
-        $memcached = new \Memcached();
-        $memcached->addServer('localhost', 11211);
+        // $memcached = new \Memcached();
+        // $memcached->addServer('localhost', 11211);
 
         // Ideally make the following into a factory service?
-        $cache = new \Doctrine\Common\Cache\MemcachedCache();
-        $cache->setMemcached($memcached);
+        // $cache = new \Doctrine\Common\Cache\MemcachedCache();
+        // $cache->setMemcached($memcached);
 
-        $ormConfig->setMetadataCacheImpl($cache);
-        $ormConfig->setQueryCacheImpl($cache);
+        // $ormConfig->setMetadataCacheImpl($cache);
+        // $ormConfig->setQueryCacheImpl($cache);
         // ---
 
 
