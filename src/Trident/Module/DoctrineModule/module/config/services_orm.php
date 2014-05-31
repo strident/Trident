@@ -36,7 +36,6 @@ return function($container) {
         $ormConfig->setQueryCacheImpl($cache);
         // ---
 
-
         return $c['doctrine.orm.entity_manager.class']::create([
             'driver'   => 'pdo_mysql',
             'user'     => $appConfig->get('database.default.username'),

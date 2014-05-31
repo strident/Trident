@@ -28,9 +28,7 @@ class TridentFrameworkModule extends AbstractModule
     public function registerRoutes(RouteCollection $collection)
     {
         $routes     = require __DIR__.'/module/config/routes.php';
-        $registered = call_user_func($routes, $collection);
-
-        // @todo: Throw some exception if registered is false
+        call_user_func($routes, $collection);
     }
 
     /**
@@ -38,9 +36,10 @@ class TridentFrameworkModule extends AbstractModule
      */
     public function registerServices(Container $container)
     {
-        $services   = require __DIR__.'/module/config/services.php';
-        $registered = call_user_func($services, $container);
+        $services = require __DIR__.'/module/config/services.php';
+        $cache    = require __DIR__.'/module/config/services_cache.php';
 
-        // @todo: Throw some exception if registered is false
+        call_user_func($services, $container);
+        call_user_func($cache, $container);
     }
 }

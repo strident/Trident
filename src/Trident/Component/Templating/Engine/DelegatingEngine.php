@@ -67,20 +67,29 @@ class DelegatingEngine implements EngineInterface
      *
      * @return EngineInterface
      */
-    public function resolveEngine($template)
+    protected function resolveEngine($template)
     {
-        $reference = $this->resolver->resolve($template);
-        $engine = $reference->get('engine');
+        $reference     = $this->resolver->resolve($template);
+        $engine        = $reference->get('engine');
         $engineService = 'templating.engine.'.$engine;
 
         if ( ! $this->container->has($engineService)) {
             throw new \RuntimeException(sprintf(
                 'Template engine "%s" does not exist or is not registered as a service.',
-                $engine
+                $engineService
             ));
         }
 
-        return $this->container->get($engineService);
+        $engine = $this->container->get($engineService);
+
+        if ( ! engine instanceof EngineInterface) {
+            throw new \RuntimeException(sprintf(
+                'Service "%s" is not a valid template engine.',
+                $name
+            ));
+        }
+
+        return $engine;
     }
 
     /**
