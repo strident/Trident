@@ -12,6 +12,7 @@
 namespace Trident\Component\Templating\Engine;
 
 use Trident\Component\Templating\Loader\TwigFileLoader;
+use Trident\Component\Templating\TemplateReferenceInterface;
 
 /**
  * Twig Template Engine Wrapper
@@ -39,5 +40,13 @@ class TwigEngine implements EngineInterface
     public function render($template, array $parameters = null)
     {
         return $this->environment->render($template, $parameters);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isSupported(TemplateReferenceInterface $reference)
+    {
+        return 'twig' === $reference->get('engine');
     }
 }

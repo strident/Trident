@@ -11,6 +11,8 @@
 
 namespace Trident\Component\Templating\Engine;
 
+use Trident\Component\Templating\TemplateReferenceInterface;
+
 /**
  * Template Engine Interface
  *
@@ -27,4 +29,13 @@ interface EngineInterface
      * @return string
      */
     public function render($template, array $parameters = null);
+
+    /**
+     * Does this engine support this template?
+     *
+     * @param  TemplateReferenceInterface $reference
+     *
+     * @return boolean
+     */
+    public function isSupported(TemplateReferenceInterface $reference);
 }
