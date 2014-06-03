@@ -82,7 +82,7 @@ class DelegatingEngine implements EngineInterface
 
         $engine = $this->container->get($engineService);
 
-        if ( ! engine instanceof EngineInterface) {
+        if ( ! $engine instanceof EngineInterface) {
             throw new \RuntimeException(sprintf(
                 'Service "%s" is not a valid template engine.',
                 $name
