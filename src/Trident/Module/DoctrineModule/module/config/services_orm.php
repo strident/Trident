@@ -19,28 +19,40 @@ return function($container) {
         return new $c['doctrine.annotations.reader.class']();
     });
 
-    $container->set('doctrine.orm.entity_manager', function($c) {
-        $appConfig = $c->get('configuration');
+    $container->set('doctrine.cache.memcached', function($c) {
+        $cache = new \Doctrine\Common\Cache\MemcachedCache();
+        $cache->setMemcached($c->get('caching.raw.memcached'));
+
+        return $cache;
+    });
+
+    $container->set('doctrine.orm.configuration', function($c) {
         $ormConfig = $c['doctrine.orm.tools_setup.class']::createAnnotationMetadataConfiguration([], false);
         $ormConfig->setMetadataDriverImpl($c->get('doctrine.annotations.driver'));
 
-        // This needs to be abstracted, and configurable
-        $memcached = new \Memcached();
-        $memcached->addServer('localhost', 11211);
+        return $ormConfig;
+    });
 
-        // Ideally make the following into a factory service?
-        $cache = new \Doctrine\Common\Cache\MemcachedCache();
-        $cache->setMemcached($memcached);
-
-        $ormConfig->setMetadataCacheImpl($cache);
-        $ormConfig->setQueryCacheImpl($cache);
-        // ---
+    $container->set('doctrine.orm.entity_manager', function($c) {
+        $appConfig = $c->get('configuration');
 
         return $c['doctrine.orm.entity_manager.class']::create([
             'driver'   => 'pdo_mysql',
             'user'     => $appConfig->get('database.default.username'),
             'password' => $appConfig->get('database.default.password'),
             'dbname'   => $appConfig->get('database.default.database'),
-        ], $ormConfig);
+        ], $c->get('doctrine.orm.configuration'));
+    });
+
+    // Extensions
+    $container->extend('doctrine.orm.configuration', function($ormConfig, $c) {
+        $appConfig = $c->get('configuration');
+
+        if (! $c['kernel.debug'] && 'memcached' === $appConfig->get('caching.default')) {
+            $ormConfig->setMetadataCacheImpl($c->get('doctrine.cache.memcached'));
+            $ormConfig->setQueryCacheImpl($c->get('doctrine.cache.memcached'));
+        }
+
+        return $ormConfig;
     });
 };

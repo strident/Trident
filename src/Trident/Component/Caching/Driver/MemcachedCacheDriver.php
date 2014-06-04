@@ -47,7 +47,7 @@ class MemcachedCacheDriver implements DriverInterface
      */
     public function set($key, $value, $expiration = 0)
     {
-
+        return $this->memcached->set($key, $value, $expiration);
     }
 
     /**
@@ -55,7 +55,7 @@ class MemcachedCacheDriver implements DriverInterface
      */
     public function get($key)
     {
-
+        return $this->memcached->get($key);
     }
 
     /**
@@ -63,7 +63,7 @@ class MemcachedCacheDriver implements DriverInterface
      */
     public function has($key)
     {
-
+        return false !== $this->get($key);
     }
 
     /**
@@ -71,7 +71,7 @@ class MemcachedCacheDriver implements DriverInterface
      */
     public function remove($key)
     {
-
+        return $this->memcached->delete($key);
     }
 
     /**
@@ -79,6 +79,6 @@ class MemcachedCacheDriver implements DriverInterface
      */
     public function flush()
     {
-
+        return $this->memcached->flush();
     }
 }

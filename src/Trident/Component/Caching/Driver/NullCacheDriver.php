@@ -25,7 +25,7 @@ class NullCacheDriver implements DriverInterface
      */
     public function set($key, $value, $expiration = 0)
     {
-
+        return true;
     }
 
     /**
@@ -33,7 +33,7 @@ class NullCacheDriver implements DriverInterface
      */
     public function get($key)
     {
-
+        return false;
     }
 
     /**
@@ -41,7 +41,7 @@ class NullCacheDriver implements DriverInterface
      */
     public function has($key)
     {
-
+        return false;
     }
 
     /**
@@ -49,7 +49,7 @@ class NullCacheDriver implements DriverInterface
      */
     public function remove($key)
     {
-
+        return true;
     }
 
     /**
@@ -57,6 +57,6 @@ class NullCacheDriver implements DriverInterface
      */
     public function flush()
     {
-
+        return true;
     }
 }
