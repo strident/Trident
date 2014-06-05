@@ -97,7 +97,7 @@ class CacheDriverFactory
      */
     protected function resolveDriver($name)
     {
-        if ( ! $this->container->has($this->drivers[$name])) {
+        if ( ! isset($this->drivers[$name]) || ! $this->container->has($this->drivers[$name])) {
             throw new \RuntimeException(sprintf(
                 'Caching driver "%s" does not exist or is not registered as a service.',
                 $name
