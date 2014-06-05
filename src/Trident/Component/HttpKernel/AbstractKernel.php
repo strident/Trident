@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Trident\Component\Configuration\Configuration;
 use Trident\Component\HttpKernel\HttpKernelInterface;
-use Trident\Component\HttpKernel\Event\ResponseEvent;
+use Trident\Component\HttpKernel\KernelEvents;
 
 /**
  * Abstract Kernel
@@ -183,7 +183,7 @@ abstract class AbstractKernel implements HttpKernelInterface
      */
     public function getDispatcher()
     {
-        // return $this->container->get('event_dispatcher');
+        return $this->container->get('event_dispatcher');
     }
 
     public function getModule($name)

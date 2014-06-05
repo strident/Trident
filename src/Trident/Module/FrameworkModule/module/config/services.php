@@ -3,6 +3,7 @@
 return function($container) {
     // Parameters
     $container['controller_resolver.class'] = 'Trident\\Component\\HttpKernel\\Controller\\ControllerResolver';
+    $container['event_dispatcher.class']    = 'Symfony\\Component\\EventDispatcher\\EventDispatcher';
     $container['route_collection.class']    = 'Symfony\\Component\\Routing\\RouteCollection';
     $container['route_context.class']       = 'Symfony\\Component\\Routing\\RequestContext';
     $container['route_matcher.class']       = 'Symfony\\Component\\Routing\\Matcher\\UrlMatcher';
@@ -11,6 +12,10 @@ return function($container) {
     // Services
     $container->set('controller_resolver', function($c) {
         return new $c['controller_resolver.class']($c);
+    });
+
+    $container->set('event_dispatcher', function($c) {
+        return new $c['event.dispatcher.class']();
     });
 
     $container->set('route_collection', function($c) {
