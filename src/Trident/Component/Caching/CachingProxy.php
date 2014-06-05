@@ -42,6 +42,16 @@ class CachingProxy
     }
 
     /**
+     * Get cache driver.
+     *
+     * @return DriverInterface
+     */
+    public function getDriver()
+    {
+        return $this->driver;
+    }
+
+    /**
      * Get a value, potentially from cache.
      *
      * @param string  $key
@@ -49,7 +59,7 @@ class CachingProxy
      *
      * @return mixed
      */
-    public function get($key, \Closure $data)
+    public function proxy($key, \Closure $data, $expiration = 0)
     {
         if ($this->driver->has($key)) {
             return $this->driver->get($key);
@@ -59,7 +69,7 @@ class CachingProxy
         $data = $data();
 
         // Value wasn't cached, so cache it for next time
-        $this->driver->set($key, $data);
+        $this->driver->set($key, $data, $expiration);
 
         return $data;
     }
