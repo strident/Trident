@@ -15,7 +15,7 @@ return function($container) {
     });
 
     $container->set('event_dispatcher', function($c) {
-        return new $c['event.dispatcher.class']();
+        return new $c['event_dispatcher.class']();
     });
 
     $container->set('route_collection', function($c) {

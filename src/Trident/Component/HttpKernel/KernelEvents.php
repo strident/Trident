@@ -23,4 +23,5 @@ final class KernelEvents
     const EXCEPTION  = 'kernel.exception';
     const CONTROLLER = 'kernel.controller';
     const VIEW       = 'kernel.view';
+    const TERMINATE  = 'kernel.terminate';
 }

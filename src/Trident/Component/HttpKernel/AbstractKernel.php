@@ -15,6 +15,8 @@ use Phimple\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Trident\Component\Configuration\Configuration;
+use Trident\Component\HttpKernel\Event\FilterResponseEvent;
+use Trident\Component\HttpKernel\Event\InterceptResponseEvent;
 use Trident\Component\HttpKernel\HttpKernelInterface;
 use Trident\Component\HttpKernel\KernelEvents;
 
@@ -61,7 +63,13 @@ abstract class AbstractKernel implements HttpKernelInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Transform a request into a response.
+     *
+     * @param  Request $request
+     * @param  string  $type
+     * @param  boolean $catch
+     *
+     * @return Response
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
@@ -69,6 +77,13 @@ abstract class AbstractKernel implements HttpKernelInterface
 
         if (false === $this->booted) {
             $this->boot();
+        }
+
+        $event = new InterceptResponseEvent($this, $request, $type);
+        $this->getDispatcher()->dispatch(KernelEvents::REQUEST, $event);
+
+        if ($event->hasResponse()) {
+            return $event->getResponse();
         }
 
         $matcher  = $this->container->get('route_matcher');
@@ -92,11 +107,26 @@ abstract class AbstractKernel implements HttpKernelInterface
             throw new \LogicException($message);
         }
 
-        return $response;
+        $event = new FilterResponseEvent($this, $request, $type, $response);
+        $this->getDispatcher()->dispatch(KernelEvents::RESPONSE, $event);
+
+        return $event->getResponse();
     }
 
     /**
-     * {@inheritdoc}
+     * Terminate the application.
+     *
+     * @param Request  $request
+     * @param Response $response
+     */
+    public function terminate(Request $request, Response $response)
+    {
+        $event = new PostResponseEvent($this, $request, $response);
+        $this->getDispatcher()->dispatch(KernelEvents::TERMINATE, $event);
+    }
+
+    /**
+     * Boot the application. Initialise all of the components.
      */
     public function boot()
     {
@@ -115,6 +145,7 @@ abstract class AbstractKernel implements HttpKernelInterface
      * Register configuration
      *
      * @param  string $environment
+     *
      * @return array
      */
     abstract public function registerConfiguration($environment);
@@ -123,12 +154,15 @@ abstract class AbstractKernel implements HttpKernelInterface
      * Register modules
      *
      * @param  string $environment
+     *
      * @return array
      */
     abstract public function registerModules($environment);
 
     /**
-     * {@inheritdoc}
+     * Get name of application.
+     *
+     * @return string
      */
     public function getName()
     {
@@ -140,7 +174,9 @@ abstract class AbstractKernel implements HttpKernelInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get application root directory.
+     *
+     * @return string
      */
     public function getRootDir()
     {
@@ -153,7 +189,9 @@ abstract class AbstractKernel implements HttpKernelInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get application cache directory.
+     *
+     * @return string
      */
     public function getCacheDir()
     {
@@ -161,7 +199,9 @@ abstract class AbstractKernel implements HttpKernelInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get application log directory.
+     *
+     * @return string
      */
     public function getLogDir()
     {
@@ -169,7 +209,9 @@ abstract class AbstractKernel implements HttpKernelInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get application character set.
+     *
+     * @return string
      */
     public function getCharset()
     {
@@ -298,6 +340,13 @@ abstract class AbstractKernel implements HttpKernelInterface
         }
     }
 
+    /**
+     * Get type of variable as a string.
+     *
+     * @param mixed $var
+     *
+     * @return string
+     */
     private function varToString($var)
     {
         if (is_object($var)) {
