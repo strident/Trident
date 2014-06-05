@@ -15,8 +15,10 @@ use Phimple\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Trident\Component\Configuration\Configuration;
+use Trident\Component\HttpKernel\Event\FilterExceptionEvent;
 use Trident\Component\HttpKernel\Event\FilterResponseEvent;
 use Trident\Component\HttpKernel\Event\InterceptResponseEvent;
+use Trident\Component\HttpKernel\Event\PostResponseEvent;
 use Trident\Component\HttpKernel\HttpKernelInterface;
 use Trident\Component\HttpKernel\KernelEvents;
 
@@ -95,7 +97,11 @@ abstract class AbstractKernel implements HttpKernelInterface
         $controller = $resolver->getController($request, $matched);
         $arguments  = $resolver->getArguments($request, $controller, $matched);
 
-        $response = call_user_func_array($controller, $arguments);
+        try {
+            $response = call_user_func_array($controller, $arguments);
+        } catch (\Exception $e) {
+            return $this->handleException($e, $request, $type);
+        }
 
         if ( ! $response instanceof Response) {
             $message = sprintf('The controller must return a valid Response (%s given).', $this->varToString($response));
@@ -107,6 +113,62 @@ abstract class AbstractKernel implements HttpKernelInterface
             throw new \LogicException($message);
         }
 
+        return $this->filterResponse($response, $request, $type);
+    }
+
+    /**
+     * Handle uncaught exceptions in application.
+     *
+     * @param  Exception $e
+     * @param  Request   $request
+     * @param  string    $type
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     */
+    protected function handleException(\Exception $e, $request, $type)
+    {
+        $event = new FilterExceptionEvent($this, $request, $type);
+        $event->setException($e);
+
+        $this->getDispatcher()->dispatch(KernelEvents::EXCEPTION, $event);
+
+        $e = $event->getException();
+
+        if ( ! $event->hasResponse()) {
+            throw $e;
+        }
+
+        $response = $event->getResponse();
+
+        if ( ! $response->isClientError() && ! $response->isServerError() && ! $response->isRedirect()) {
+            if ($e instanceof HttpExceptionInterface) {
+                $response->setStatusCode($e->getStatusCode());
+                $response->headers->add($e->getHeaders());
+            } else {
+                $response->setStatusCode(500);
+            }
+        }
+
+        try {
+            return $this->filterResponse($response, $request, $type);
+        } catch (\Exception $e) {
+            return $response;
+        }
+    }
+
+    /**
+     * Filter response.
+     *
+     * @param  Response $response
+     * @param  Request  $request
+     * @param  string   $type
+     *
+     * @return Response
+     */
+    protected function filterResponse(Response $response, Request $request, $type)
+    {
         $event = new FilterResponseEvent($this, $request, $type, $response);
         $this->getDispatcher()->dispatch(KernelEvents::RESPONSE, $event);
 
@@ -128,7 +190,7 @@ abstract class AbstractKernel implements HttpKernelInterface
     /**
      * Boot the application. Initialise all of the components.
      */
-    public function boot()
+    protected function boot()
     {
         $this->initialiseConfiguration();
         $this->initialiseModules();
@@ -238,7 +300,7 @@ abstract class AbstractKernel implements HttpKernelInterface
      *
      * @return Configuration
      */
-    public function initialiseConfiguration()
+    protected function initialiseConfiguration()
     {
         $configuration = $this->registerConfiguration($this->environment);
 
@@ -267,7 +329,7 @@ abstract class AbstractKernel implements HttpKernelInterface
      *
      * @return array
      */
-    public function initialiseModules()
+    protected function initialiseModules()
     {
         $this->modules = array();
 
@@ -286,13 +348,13 @@ abstract class AbstractKernel implements HttpKernelInterface
     }
 
     /**
-     * Get container
+     * Builds the service container.
      *
      * @return Container
      */
-    public function getContainer()
+    protected function buildContainer()
     {
-        return $this->container;
+        return new Container();
     }
 
     /**
@@ -300,7 +362,7 @@ abstract class AbstractKernel implements HttpKernelInterface
      *
      * @return Container
      */
-    public function initialiseContainer()
+    protected function initialiseContainer()
     {
         // @todo: add some form of container caching?
         $container = $this->buildContainer();
@@ -311,21 +373,11 @@ abstract class AbstractKernel implements HttpKernelInterface
     }
 
     /**
-     * Builds the service container.
-     *
-     * @return Container
-     */
-    public function buildContainer()
-    {
-        return new Container();
-    }
-
-    /**
      * Insert services into the container at application boot
      *
      * @param  Container $container
      */
-    public function prepareContainer(Container $container)
+    protected function prepareContainer(Container $container)
     {
         foreach ($this->getKernelParameters() as $key => $value) {
             $container[$key] = $value;
@@ -341,13 +393,23 @@ abstract class AbstractKernel implements HttpKernelInterface
     }
 
     /**
+     * Get container
+     *
+     * @return Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
      * Get type of variable as a string.
      *
      * @param mixed $var
      *
      * @return string
      */
-    private function varToString($var)
+    protected function varToString($var)
     {
         if (is_object($var)) {
             return sprintf('Object(%s)', get_class($var));

@@ -11,6 +11,8 @@
 
 namespace Trident\Component\HttpKernel\Event;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Trident\Component\HttpKernel\HttpKernelInterface;
 
 /**
