@@ -26,10 +26,27 @@ class ExceptionListener
         $kernel = $event->getKernel();
 
         if ( ! $kernel->isDebugMode()) {
-            $event->setResponse(new Response('An internal error has occurred.', 500));
+            $event->setResponse(new Response($this->createBody(), 500));
             return;
         }
 
         $event->setResponse(new Response('This still needs to be done.', 500));
+    }
+
+    protected function createBody()
+    {
+        return <<<EOF
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="robots" content="noindex,nofollow" />
+        <title>Internal Error</title>
+    </head>
+    <body>
+        <p>An internal error has occurred. Please try again later.</p>
+    </body>
+</html>
+EOF;
     }
 }
