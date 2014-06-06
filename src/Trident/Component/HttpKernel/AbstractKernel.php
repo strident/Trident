@@ -56,12 +56,9 @@ abstract class AbstractKernel implements HttpKernelInterface
     {
         $this->debug       = (bool) $debug;
         $this->environment = $environment;
-        $this->rootDir     = $this->getRootDir();
         $this->name        = $this->getName();
-
-        if ($this->debug) {
-            $this->startTime = microtime(true);
-        }
+        $this->rootDir     = $this->getRootDir();
+        $this->startTime   = microtime(true);
     }
 
     /**
@@ -220,6 +217,26 @@ abstract class AbstractKernel implements HttpKernelInterface
      * @return array
      */
     abstract public function registerModules($environment);
+
+    /**
+     * Is the application in debug mode?
+     *
+     * @return boolean
+     */
+    public function isDebugMode()
+    {
+        return (bool) $this->debug;
+    }
+
+    /**
+     * Get start time.
+     *
+     * @return float
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
+    }
 
     /**
      * Get name of application.
