@@ -68,41 +68,41 @@ class Toolbar
     {
         return <<<EOF
 .trt-toolbar {
-    background-color: #eff1f5;
-    bottom: 0;
-    color: #2b303b;
-    font: 14px/20px "Helvetica Neue", Helvetica, Arial, sans-serif;
-    left: 0;
-    padding: 12px;
-    position: fixed;
-    right: 0;
-}
-.trt-toolbar:hover {
-    opacity: 0.4;
-}
-.trt-logo {
-    color: #b48ead;
-    display: inline-block;
-    margin-right: 20px;
-}
-.trt-segments {
-    display: inline-block;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-.trt-segments li {
-    border-right: solid 2px #dfe1e8;
-    display: inline-block;
-    padding: 0 10px;
-}
-.trt-segments li:first-child {
-    padding-left: 0;
-}
-.trt-segments li:last-child {
-    border-right: none;
-    padding-right: 0;
-}
+                background-color: #eff1f5;
+                bottom: 0;
+                color: #2b303b;
+                font: 14px/20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+                left: 0;
+                padding: 12px;
+                position: fixed;
+                right: 0;
+            }
+            .trt-toolbar:hover {
+                opacity: 0.4;
+            }
+            .trt-logo {
+                color: #b48ead;
+                display: inline-block;
+                margin-right: 20px;
+            }
+            .trt-segments {
+                display: inline-block;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .trt-segments li {
+                border-right: solid 2px #dfe1e8;
+                display: inline-block;
+                padding: 0 10px;
+            }
+            .trt-segments li:first-child {
+                padding-left: 0;
+            }
+            .trt-segments li:last-child {
+                border-right: none;
+                padding-right: 0;
+            }
 EOF;
     }
 
@@ -116,7 +116,7 @@ EOF;
 
         // Formatting looks odd here, but it's necessary to output clean HTML
         return <<<EOF
-        <li><strong>{$segment->getBaseName()}</strong>: {$segment->getBaseValue()}{$segment->getBaseUnit()}</li>
+            <li><strong>{$segment->getBaseName()}</strong>: {$segment->getBaseValue()}{$segment->getBaseUnit()}</li>
 
 EOF;
     }
@@ -133,15 +133,15 @@ EOF;
         $content = trim($content);
 
         return <<<EOF
-<div class="trt-toolbar">
-    <style type="text/css" scoped>
-        {$css}
-    </style>
-    <span class="trt-logo">Trident</span>
-    <ul class="trt-segments">
-        {$content}
-    </ul>
-</div>
+    <div class="trt-toolbar">
+        <style type="text/css" scoped>
+            {$css}
+        </style>
+        <span class="trt-logo">Trident</span>
+        <ul class="trt-segments">
+            {$content}
+        </ul>
+    </div>
 EOF;
     }
 }
