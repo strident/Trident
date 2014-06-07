@@ -89,7 +89,7 @@ abstract class AbstractKernel implements HttpKernelInterface
         $matcher  = $this->container->get('route_matcher');
         $resolver = $this->container->get('controller_resolver');
 
-        $path    = parse_url($request->getURI(), PHP_URL_PATH);
+        $path    = parse_url($request->query->get('_url'), PHP_URL_PATH);
         $matched = $matcher->match($path);
 
         $controller = $resolver->getController($request, $matched);
