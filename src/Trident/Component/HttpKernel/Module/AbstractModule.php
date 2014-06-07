@@ -58,7 +58,7 @@ abstract class AbstractModule
     }
 
     /**
-     * Returns the bundle name (the class short name).
+     * Returns the module name (the class short name).
      *
      * @return string
      */
