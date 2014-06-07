@@ -19,7 +19,7 @@ use Trident\Component\HttpKernel\Event\FilterResponseEvent;
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class ToolbarResponseListener
+class ToolbarInjectionResponseListener
 {
     protected $toolbar;
 

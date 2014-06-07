@@ -4,8 +4,10 @@ use Trident\Component\HttpKernel\KernelEvents;
 
 return function($container) {
     // Parameters
+    $container['debug.listener.toolbar_controller.class']    = 'Trident\\Module\\DebugModule\\Listener\\ToolbarControllerListener';
     $container['debug.listener.exception.class']             = 'Trident\\Module\\DebugModule\\Listener\\ExceptionListener';
-    $container['debug.listener.toolbar_response.class']      = 'Trident\\Module\\DebugModule\\Listener\\ToolbarResponseListener';
+    $container['debug.listener.toolbar_injection.class']     = 'Trident\\Module\\DebugModule\\Listener\\ToolbarInjectionResponseListener';
+    $container['debug.toolbar.extension.controller.class']   = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentControllerExtension';
     $container['debug.toolbar.extension.memory_usage.class'] = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentMemoryUsageExtension';
     $container['debug.toolbar.extension.runtime.class']      = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentRuntimeExtension';
     $container['debug.toolbar.extension.version.class']      = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentVersionExtension';
@@ -13,12 +15,20 @@ return function($container) {
 
 
     // Services
+    $container->set('debug.listener.toolbar_controller', function($c) {
+        return new $c['debug.listener.toolbar_controller.class']($c->get('debug.toolbar.extension.controller'));
+    });
+
     $container->set('debug.listener.exception', function($c) {
         return new $c['debug.listener.exception.class']();
     });
 
-    $container->set('debug.listener.toolbar_response', function($c) {
-        return new $c['debug.listener.toolbar_response.class']($c->get('debug.toolbar'));
+    $container->set('debug.listener.toolbar_injection', function($c) {
+        return new $c['debug.listener.toolbar_injection.class']($c->get('debug.toolbar'));
+    });
+
+    $container->set('debug.toolbar.extension.controller', function($c) {
+        return new $c['debug.toolbar.extension.controller.class']();
     });
 
     $container->set('debug.toolbar.extension.memory_usage', function($c) {
@@ -41,15 +51,17 @@ return function($container) {
     // Extensions
     $container->extend('debug.toolbar', function($toolbar, $c) {
         $toolbar->addExtension($c->get('debug.toolbar.extension.version'));
-        $toolbar->addExtension($c->get('debug.toolbar.extension.memory_usage'));
+        $toolbar->addExtension($c->get('debug.toolbar.extension.controller'));
         $toolbar->addExtension($c->get('debug.toolbar.extension.runtime'));
+        $toolbar->addExtension($c->get('debug.toolbar.extension.memory_usage'));
 
         return $toolbar;
     });
 
     $container->extend('event_dispatcher', function($dispatcher, $c) {
+        $dispatcher->addListener(KernelEvents::CONTROLLER, [$c->get('debug.listener.toolbar_controller'), 'onController']);
         // $dispatcher->addListener(KernelEvents::EXCEPTION, [$c->get('debug.listener.exception'), 'onException']);
-        $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_response'), 'onResponse']);
+        $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_injection'), 'onResponse']);
 
         return $dispatcher;
     });

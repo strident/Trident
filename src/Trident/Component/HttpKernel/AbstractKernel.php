@@ -15,6 +15,7 @@ use Phimple\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Trident\Component\Configuration\Configuration;
+use Trident\Component\HttpKernel\Event\FilterControllerEvent;
 use Trident\Component\HttpKernel\Event\FilterExceptionEvent;
 use Trident\Component\HttpKernel\Event\FilterResponseEvent;
 use Trident\Component\HttpKernel\Event\InterceptResponseEvent;
@@ -93,6 +94,11 @@ abstract class AbstractKernel implements HttpKernelInterface
 
         $controller = $resolver->getController($request, $matched);
         $arguments  = $resolver->getArguments($request, $controller, $matched);
+
+        $event = new FilterControllerEvent($this, $request, $type);
+        $event->setController($controller);
+        $event->setArguments($arguments);
+        $this->getDispatcher()->dispatch(KernelEvents::CONTROLLER, $event);
 
         try {
             $response = call_user_func_array($controller, $arguments);
