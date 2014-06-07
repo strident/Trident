@@ -8,6 +8,7 @@ return function($container) {
     $container['debug.listener.toolbar_response.class']      = 'Trident\\Module\\DebugModule\\Listener\\ToolbarResponseListener';
     $container['debug.toolbar.extension.memory_usage.class'] = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentMemoryUsageExtension';
     $container['debug.toolbar.extension.runtime.class']      = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentRuntimeExtension';
+    $container['debug.toolbar.extension.version.class']      = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentVersionExtension';
     $container['debug.toolbar.class']                        = 'Trident\\Component\\Debug\\Toolbar\\Toolbar';
 
 
@@ -28,6 +29,10 @@ return function($container) {
         return new $c['debug.toolbar.extension.runtime.class']($c->get('kernel'));
     });
 
+    $container->set('debug.toolbar.extension.version', function($c) {
+        return new $c['debug.toolbar.extension.version.class']($c->get('kernel'));
+    });
+
     $container->set('debug.toolbar', function($c) {
         return new $c['debug.toolbar.class']();
     });
@@ -35,6 +40,7 @@ return function($container) {
 
     // Extensions
     $container->extend('debug.toolbar', function($toolbar, $c) {
+        $toolbar->addExtension($c->get('debug.toolbar.extension.version'));
         $toolbar->addExtension($c->get('debug.toolbar.extension.memory_usage'));
         $toolbar->addExtension($c->get('debug.toolbar.extension.runtime'));
 

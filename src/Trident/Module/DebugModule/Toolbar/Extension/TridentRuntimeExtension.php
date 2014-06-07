@@ -56,7 +56,7 @@ class TridentRuntimeExtension extends AbstractExtension
         $runtime = (microtime(true) - $this->kernel->getStartTime()) * 1000;
 
         $this->segment->setBaseName('Runtime');
-        $this->segment->setBaseValue($runtime);
+        $this->segment->setBaseValue(round($runtime, 2));
         $this->segment->setBaseUnit('ms');
 
         return $this->segment;
