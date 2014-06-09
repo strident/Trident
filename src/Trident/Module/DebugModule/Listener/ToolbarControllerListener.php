@@ -12,6 +12,7 @@
 namespace Trident\Module\DebugModule\Listener;
 
 use Trident\Component\HttpKernel\Event\FilterControllerEvent;
+use Trident\Component\HttpKernel\Event\FilterResponseEvent;
 use Trident\Module\DebugModule\Toolbar\Extension\TridentControllerExtension;
 
 /**
@@ -45,6 +46,16 @@ class ToolbarControllerListener
 
         $this->extension->setController($controller);
         $this->extension->setAction($action);
+    }
+
+    /**
+     * On kernel response event.
+     *
+     * @param  FilterResponseEvent $event
+     */
+    public function onResponse(FilterResponseEvent $event)
+    {
+        $this->extension->setStatusCode($event->getResponse()->getStatusCode());
     }
 
     /**

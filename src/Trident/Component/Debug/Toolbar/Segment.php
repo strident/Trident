@@ -21,6 +21,19 @@ class Segment implements SegmentInterface
     protected $baseName;
     protected $baseValue;
     protected $baseUnit;
+    protected $baseIndicator;
+    protected $baseIndicatorColor;
+
+    // Taken from Chris Kempson's base16 (ocean)
+    // http://chriskempson.github.io/base16/#ocean
+    const RED    = '#bf616a';
+    const ORANGE = '#d08770';
+    const YELLOW = '#ebcb8b';
+    const GREEN  = '#a3be8c';
+    const CYAN   = '#96b5b4';
+    const BLUE   = '#8fa1b3';
+    const PURPLE = '#b48ead';
+    const BROWN  = '#ab7967';
 
     /**
      * {@inheritDoc}
@@ -74,5 +87,41 @@ class Segment implements SegmentInterface
     public function getBaseUnit()
     {
         return $this->baseUnit;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setBaseIndicator($indicator)
+    {
+        $this->baseIndicator = $indicator;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBaseIndicator()
+    {
+        return $this->baseIndicator;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setBaseIndicatorColor($indicatorColor)
+    {
+        $this->baseIndicatorColor = $indicatorColor;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBaseIndicatorColor()
+    {
+        return $this->baseIndicatorColor;
     }
 }

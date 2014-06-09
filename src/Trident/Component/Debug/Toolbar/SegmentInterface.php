@@ -63,4 +63,36 @@ interface SegmentInterface
      * @return mixed
      */
     public function getBaseUnit();
+
+    /**
+     * Set base indicator value.
+     *
+     * @param mixed $indicator
+     *
+     * @return SegmentInterface
+     */
+    public function setBaseIndicator($indicator);
+
+    /**
+     * Get base indicator value.
+     *
+     * @return mixed
+     */
+    public function getBaseIndicator();
+
+    /**
+     * Set base indicator color.
+     *
+     * @param string $indicatorColor
+     *
+     * @return SegmentInterface
+     */
+    public function setBaseIndicatorColor($indicatorColor);
+
+    /**
+     * Get base indicator color.
+     *
+     * @return string
+     */
+    public function getBaseIndicatorColor();
 }

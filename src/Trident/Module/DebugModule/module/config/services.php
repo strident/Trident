@@ -60,7 +60,8 @@ return function($container) {
 
     $container->extend('event_dispatcher', function($dispatcher, $c) {
         $dispatcher->addListener(KernelEvents::CONTROLLER, [$c->get('debug.listener.toolbar_controller'), 'onController']);
-        // $dispatcher->addListener(KernelEvents::EXCEPTION, [$c->get('debug.listener.exception'), 'onException']);
+        $dispatcher->addListener(KernelEvents::EXCEPTION, [$c->get('debug.listener.exception'), 'onException']);
+        $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_controller'), 'onResponse']);
         $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_injection'), 'onResponse']);
 
         return $dispatcher;

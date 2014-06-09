@@ -21,8 +21,9 @@ use Trident\Component\Debug\Toolbar\Segment;
  */
 class TridentControllerExtension extends AbstractExtension
 {
-    protected $action;
-    protected $controller;
+    private $action;
+    private $controller;
+    private $statusCode;
 
     /**
      * {@inheritDoc}
@@ -39,18 +40,38 @@ class TridentControllerExtension extends AbstractExtension
      *
      * @return Segment
      */
-    protected function decorateSegment()
+    private function decorateSegment()
     {
         $this->segment->setBaseName('Controller');
         $this->segment->setBaseValue("{$this->controller}::{$this->action}");
+        $this->segment->setBaseIndicator($this->statusCode);
+        $this->segment->setBaseIndicatorColor($this->getIndicatorColorForStatusCode($this->statusCode));
 
         return $this->segment;
+    }
+
+    private function getIndicatorColorForStatusCode($statusCode)
+    {
+        if ( ! is_int($statusCode)) {
+            throw new \RuntimeException(sprintf('Status code "%s" is not an integer.', $statusCode));
+        }
+
+        switch (true) {
+            case $statusCode >= 500:
+                return Segment::RED;
+            case $statusCode >= 400:
+                return Segment::YELLOW;
+            default:
+                return Segment::GREEN;
+        }
     }
 
     /**
      * Set action.
      *
      * @param string $action
+     *
+     * @return TridentControllerExtension
      */
     public function setAction($action)
     {
@@ -73,6 +94,8 @@ class TridentControllerExtension extends AbstractExtension
      * Set controller.
      *
      * @param string $controller
+     *
+     * @return TridentControllerExtension
      */
     public function setController($controller)
     {
@@ -89,5 +112,29 @@ class TridentControllerExtension extends AbstractExtension
     public function getController()
     {
         return $this->controller;
+    }
+
+    /**
+     * Set status code.
+     *
+     * @param integer $statusCode
+     *
+     * @return TridentControllerExtension
+     */
+    public function setStatusCode($statusCode)
+    {
+        $this->statusCode = $statusCode;
+
+        return $this;
+    }
+
+    /**
+     * Get status code.
+     *
+     * @return integer
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
     }
 }
