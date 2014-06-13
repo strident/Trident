@@ -115,7 +115,7 @@ class ExceptionListener
             </div>
         </div>
         <footer class="container">
-            <p class="copyright">&copy; 2014 Strident - Trident v{$tridentVersion}</p>
+            <p class="copyright">&copy; 2014 <a href="http://strident.io/">Strident</a> - Trident v{$tridentVersion}</p>
         </footer>
     </body>
 </html>
@@ -138,6 +138,15 @@ EOF;
             body {
                 background-color: #272b35;
                 color: #eff1f5;
+            }
+
+            a {
+                color: #eff1f5;
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
             }
 
             .container {
