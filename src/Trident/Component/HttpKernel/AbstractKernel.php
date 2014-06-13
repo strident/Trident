@@ -20,6 +20,7 @@ use Trident\Component\HttpKernel\Event\FilterExceptionEvent;
 use Trident\Component\HttpKernel\Event\FilterResponseEvent;
 use Trident\Component\HttpKernel\Event\InterceptResponseEvent;
 use Trident\Component\HttpKernel\Event\PostResponseEvent;
+use Trident\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Trident\Component\HttpKernel\HttpKernelInterface;
 use Trident\Component\HttpKernel\KernelEvents;
 
