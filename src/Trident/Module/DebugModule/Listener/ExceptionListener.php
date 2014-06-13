@@ -115,7 +115,7 @@ class ExceptionListener
             </div>
         </div>
         <footer class="container">
-            <p class="copyright">&copy; 2014 <a href="http://strident.io/">Strident</a> - Trident v{$tridentVersion}</p>
+            <p class="copyright">&copy; 2014 <a target="_blank" href="http://strident.io/">Strident</a> - Trident v{$tridentVersion}</p>
         </footer>
     </body>
 </html>
