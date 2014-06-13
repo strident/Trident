@@ -12,15 +12,17 @@
 namespace Trident\Component\HttpKernel;
 
 use Phimple\Container;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Trident\Component\Configuration\Configuration;
+use Trident\Component\HttpFoundation\Request;
 use Trident\Component\HttpKernel\Event\FilterControllerEvent;
 use Trident\Component\HttpKernel\Event\FilterExceptionEvent;
 use Trident\Component\HttpKernel\Event\FilterResponseEvent;
 use Trident\Component\HttpKernel\Event\InterceptResponseEvent;
 use Trident\Component\HttpKernel\Event\PostResponseEvent;
 use Trident\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Trident\Component\HttpKernel\Exception\NotFoundHttpException;
 use Trident\Component\HttpKernel\HttpKernelInterface;
 use Trident\Component\HttpKernel\KernelEvents;
 
@@ -90,8 +92,19 @@ abstract class AbstractKernel implements HttpKernelInterface
         $matcher  = $this->container->get('route_matcher');
         $resolver = $this->container->get('controller_resolver');
 
-        $path    = parse_url($request->query->get('_url'), PHP_URL_PATH);
-        $matched = $matcher->match($path);
+        try {
+            // Attempt to find the route from the request
+            $path    = parse_url($request->query->get('_url'), PHP_URL_PATH);
+            $matched = $matcher->match($path);
+        } catch (ResourceNotFoundException $e) {
+            // If no route is found, throw handle a 404 exception
+            $notFoundException = new NotFoundHttpException(sprintf(
+                'No route found for path "%s".',
+                $request->generateRelative()
+            ));
+
+            return $this->handleException($notFoundException, $request, $type);
+        }
 
         $controller = $resolver->getController($request, $matched);
         $arguments  = $resolver->getArguments($request, $controller, $matched);
@@ -417,11 +430,11 @@ abstract class AbstractKernel implements HttpKernelInterface
     }
 
     /**
-     * Get container
+     * Get container.
      *
      * @return Container
      */
-    public function getContainer()
+    private function getContainer()
     {
         return $this->container;
     }

@@ -33,31 +33,13 @@ class ExceptionListener
      */
     public function onException(FilterExceptionEvent $event)
     {
-        $this->kernel  = $event->getKernel();
-        $this->request = $event->getRequest();
+        $this->exception = $event->getException();
+        $this->kernel    = $event->getKernel();
+        $this->request   = $event->getRequest();
 
         $event->setResponse(new Response(
             $this->createBody($event)
         ));
-    }
-
-    /**
-     * Generate the URI of the given page.
-     *
-     * @return string
-     */
-    private function generateUri()
-    {
-        $rawQuery = $this->request->query->all();
-
-        $path  = array_shift($rawQuery);
-        $query = http_build_query($rawQuery);
-
-        if ('' !== $query) {
-            $query = '?'.$query;
-        }
-
-        return $path.$query;
     }
 
     /**
@@ -72,11 +54,11 @@ class ExceptionListener
         $exception = $event->getException();
 
         if ($exception instanceof HttpExceptionInterface && 404 === $exception->getStatusCode()) {
-            $message = 'Ooops! Page not found.';
-            $method  = 'onPageNotFound';
+            $title  = 'Ooops! Page not found.';
+            $method = 'onPageNotFound';
         } else {
-            $message = 'Uh oh, an internal error has occurred.';
-            $method  = 'onException';
+            $title  = 'Uh oh, an error has occurred.';
+            $method = 'onException';
         }
 
         $statusCode     = $exception->getStatusCode() ? $exception->getStatusCode() : 500;
@@ -88,7 +70,7 @@ class ExceptionListener
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="robots" content="noindex,nofollow" />
-        <title>{$message}</title>
+        <title>{$title}</title>
         <link href='//fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
         <style type="text/css">
 {$this->getCss()}
@@ -101,13 +83,13 @@ class ExceptionListener
         <div class="pre-esque">
             <div class="container pre-container">
                 <div class="pre-message">
-                    <span class="line"><span class="comment"># GET {$this->generateUri()}</span></span>
+                    <span class="line"><span class="comment"># {$this->request->getMethod()} {$this->request->generateRelative()}</span></span>
                     <span class="line"></span>
                     <span class="line"><span class="comment">// ...</span></span>
                     <span class="line"><span class="keyword">public function</span> <span class="function">{$method}</span>(<span class="method">FilterExceptionEvent</span> \$event)</span>
                     <span class="line">{</span>
                     <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;\$event<span class="keyword">-></span><span class="method">setResponse</span>(<span class="keyword">new</span> Response(</span>
-                    <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'{$message}'</span>, <span class="number">{$statusCode}</span>
+                    <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'{$this->exception->getMessage()}'</span>, <span class="number">{$statusCode}</span>
                     <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;));</span>
                     <span class="line">}</span>
                     <span class="line"></span>

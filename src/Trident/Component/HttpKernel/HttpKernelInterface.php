@@ -11,8 +11,8 @@
 
 namespace Trident\Component\HttpKernel;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Trident\Component\HttpFoundation\Request;
 
 /**
  * Http Kernel Interface
