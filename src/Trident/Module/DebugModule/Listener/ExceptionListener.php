@@ -24,6 +24,7 @@ use Trident\Component\HttpKernel\AbstractKernel;
 class ExceptionListener
 {
     private $kernel;
+    private $request;
 
     /**
      * On kernel exception.
@@ -32,11 +33,31 @@ class ExceptionListener
      */
     public function onException(FilterExceptionEvent $event)
     {
-        $this->kernel = $event->getKernel();
+        $this->kernel  = $event->getKernel();
+        $this->request = $event->getRequest();
 
         $event->setResponse(new Response(
             $this->createBody($event)
         ));
+    }
+
+    /**
+     * Generate the URI of the given page.
+     *
+     * @return string
+     */
+    private function generateUri()
+    {
+        $rawQuery = $this->request->query->all();
+
+        $path  = array_shift($rawQuery);
+        $query = http_build_query($rawQuery);
+
+        if ('' !== $query) {
+            $query = '?'.$query;
+        }
+
+        return $path.$query;
     }
 
     /**
@@ -80,10 +101,11 @@ class ExceptionListener
         <div class="pre-esque">
             <div class="container pre-container">
                 <div class="pre-message">
-                    <span class="line"><span class="comment"># GET /</span></span>
+                    <span class="line"><span class="comment"># GET {$this->generateUri()}</span></span>
                     <span class="line"></span>
                     <span class="line"><span class="comment">// ...</span></span>
-                    <span class="line"><span class="keyword">public function</span> <span class="function">{$method}</span>(<span class="method">FilterExceptionEvent</span> \$event) {</span>
+                    <span class="line"><span class="keyword">public function</span> <span class="function">{$method}</span>(<span class="method">FilterExceptionEvent</span> \$event)</span>
+                    <span class="line">{</span>
                     <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;\$event<span class="keyword">-></span><span class="method">setResponse</span>(<span class="keyword">new</span> Response(</span>
                     <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'{$message}'</span>, <span class="number">{$statusCode}</span>
                     <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;));</span>
