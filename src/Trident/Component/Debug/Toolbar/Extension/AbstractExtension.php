@@ -22,31 +22,14 @@ use Trident\Component\Debug\Toolbar\Segment;
 abstract class AbstractExtension implements ExtensionInterface
 {
     protected $name;
-    protected $segment;
-
-    public function __construct()
-    {
-        $this->segment = new Segment();
-    }
-
-    /**
-     * Set the segment.
-     *
-     * @param Segment $segment
-     */
-    public function setSegment(Segment $segment)
-    {
-        $this->segment = $segment;
-
-        return $this;
-    }
+    protected $data = [];
 
     /**
      * {@inheritDoc}
      */
-    public function getSegment()
+    public function getData()
     {
-        return $this->segment;
+        return $this->data;
     }
 
     /**
@@ -63,4 +46,9 @@ abstract class AbstractExtension implements ExtensionInterface
 
         return $this->name = false === $pos ? $name : substr($name, $pos + 1);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    abstract public function getTemplateName();
 }

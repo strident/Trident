@@ -19,7 +19,7 @@ return function($container) {
     });
 
     $container->set('debug.listener.toolbar_injection', function($c) {
-        return new $c['debug.listener.toolbar_injection.class']($c->get('debug.toolbar'));
+        return new $c['debug.listener.toolbar_injection.class']($c->get('templating.engine.delegating'), $c->get('debug.toolbar'));
     });
 
     $container->set('debug.toolbar.extension.controller', function($c) {

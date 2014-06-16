@@ -1,0 +1,13 @@
+<div class="trt-toolbar">
+    <style type="text/css">
+        {% include 'TridentDebugModule:Toolbar:style.css.twig' %}
+    </style>
+
+    <ul class="trt-segments">
+        {% for extension in extensions %}
+            <li class="trt-segment">
+                {% include extension.templateName with {data: extension.data} %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>

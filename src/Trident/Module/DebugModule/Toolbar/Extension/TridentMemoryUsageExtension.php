@@ -12,7 +12,6 @@
 namespace Trident\Module\DebugModule\Toolbar\Extension;
 
 use Trident\Component\Debug\Toolbar\Extension\AbstractExtension;
-use Trident\Component\Debug\Toolbar\Segment;
 
 /**
  * Memory Usage Debug Toolbar Extension
@@ -21,29 +20,52 @@ use Trident\Component\Debug\Toolbar\Segment;
  */
 class TridentMemoryUsageExtension extends AbstractExtension
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function getSegment()
+    public function __construct()
     {
-        $this->decorateSegment();
-
-        return parent::getSegment();
+        $this->data = [
+            'memory'      => memory_get_peak_usage(true),
+            'memoryLimit' => $this->convertToBytes(ini_get('memory_limit'))
+        ];
     }
 
     /**
-     * Decorate this extensions Segment.
-     *
-     * @return Segment
+     * {@inheritDoc}
      */
-    protected function decorateSegment()
+    public function getTemplateName()
     {
-        $memory = memory_get_peak_usage() / 1048576;
+        return 'TridentDebugModule:Toolbar/Extension:memory-usage.html.twig';
+    }
 
-        $this->segment->setBaseName('Memory');
-        $this->segment->setBaseValue(round($memory, 2));
-        $this->segment->setBaseUnit('MiB');
+    /**
+     * Convert mixed to bytes.
+     *
+     * @param mixed $memoryLimit
+     *
+     * @return integer
+     */
+    private function convertToBytes($memoryLimit)
+    {
+        if ('-1' === $memoryLimit) {
+            return -1;
+        }
 
-        return $this->segment;
+        $memoryLimit = strtolower($memoryLimit);
+        $max = strtolower(ltrim($memoryLimit, '+'));
+        if (0 === strpos($max, '0x')) {
+            $max = intval($max, 16);
+        } elseif (0 === strpos($max, '0')) {
+            $max = intval($max, 8);
+        } else {
+            $max = intval($max);
+        }
+
+        switch (substr($memoryLimit, -1)) {
+            case 't': $max *= 1024;
+            case 'g': $max *= 1024;
+            case 'm': $max *= 1024;
+            case 'k': $max *= 1024;
+        }
+
+        return $max;
     }
 }

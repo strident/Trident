@@ -34,7 +34,7 @@ class Templating
      *
      * @return Response
      */
-    public function render($template, array $parameters = null, Response $response = null)
+    public function render($template, array $parameters = array(), Response $response = null)
     {
         if ( ! $response instanceof Response) {
             $response = new Response();

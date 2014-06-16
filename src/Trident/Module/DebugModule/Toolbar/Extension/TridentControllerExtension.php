@@ -12,7 +12,6 @@
 namespace Trident\Module\DebugModule\Toolbar\Extension;
 
 use Trident\Component\Debug\Toolbar\Extension\AbstractExtension;
-use Trident\Component\Debug\Toolbar\Segment;
 
 /**
  * Memory Usage Debug Toolbar Extension
@@ -28,42 +27,23 @@ class TridentControllerExtension extends AbstractExtension
     /**
      * {@inheritDoc}
      */
-    public function getSegment()
+    public function getTemplateName()
     {
-        $this->decorateSegment();
-
-        return parent::getSegment();
+        return 'TridentDebugModule:Toolbar/Extension:controller.html.twig';
     }
 
     /**
-     * Decorate this extensions Segment.
+     * Build the extension data.
      *
-     * @return Segment
+     * @return array
      */
-    private function decorateSegment()
+    public function buildData()
     {
-        $this->segment->setBaseName('Controller');
-        $this->segment->setBaseValue("{$this->controller}::{$this->action}");
-        $this->segment->setBaseIndicator($this->statusCode);
-        $this->segment->setBaseIndicatorColor($this->getIndicatorColorForStatusCode($this->statusCode));
-
-        return $this->segment;
-    }
-
-    private function getIndicatorColorForStatusCode($statusCode)
-    {
-        if ( ! is_int($statusCode)) {
-            throw new \RuntimeException(sprintf('Status code "%s" is not an integer.', $statusCode));
-        }
-
-        switch (true) {
-            case $statusCode >= 500:
-                return Segment::RED;
-            case $statusCode >= 400:
-                return Segment::YELLOW;
-            default:
-                return Segment::GREEN;
-        }
+        $this->data = [
+            'action'     => $this->action,
+            'controller' => $this->controller,
+            'statusCode' => $this->statusCode,
+        ];
     }
 
     /**

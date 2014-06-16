@@ -1,0 +1,34 @@
+{% extends 'TridentDebugModule:Toolbar:toolbar-item.html.twig' %}
+
+{% if data.statusCode >= 500 %}
+    {% set labelClass = 'trt-label-red' %}
+{% elseif data.statusCode >= 400 %}
+    {% set labelClass = 'trt-label-yellow' %}
+{% else %}
+    {% set labelClass = 'trt-label-green' %}
+{% endif %}
+
+{% block label %}
+    <span class="trt-label {{ labelClass }}">{{ data.statusCode }}</span>
+
+    {% if (data.controller is null) or (data.action is null) %}
+        <span class="trt-label">N/A</span>
+    {% else %}
+        <span class="trt-label">{{ data.controller }}::{{ data.action }}</span>
+    {% endif %}
+{% endblock %}
+
+{% block panel %}
+    <div class="trt-panel-item">
+        <strong>Controller</strong>
+        {% if (data.controller is null) or (data.action is null) %}
+            <span>N/A</span>
+        {% else %}
+            <span>{{ data.controller }}::{{ data.action }}</span>
+        {% endif %}
+    </div>
+    <div class="trt-panel-item">
+        <strong>Status Code</strong>
+        <span class="trt-label {{ labelClass }}">{{ data.statusCode }}</span>
+    </div>
+{% endblock %}

@@ -28,7 +28,7 @@ interface EngineInterface
      *
      * @return string
      */
-    public function render($template, array $parameters = null);
+    public function render($template, array $parameters = array());
 
     /**
      * Does this engine support this template?

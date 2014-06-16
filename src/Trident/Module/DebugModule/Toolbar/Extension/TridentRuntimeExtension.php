@@ -12,7 +12,6 @@
 namespace Trident\Module\DebugModule\Toolbar\Extension;
 
 use Trident\Component\Debug\Toolbar\Extension\AbstractExtension;
-use Trident\Component\Debug\Toolbar\Segment;
 use Trident\Component\HttpKernel\AbstractKernel;
 
 /**
@@ -22,7 +21,7 @@ use Trident\Component\HttpKernel\AbstractKernel;
  */
 class TridentRuntimeExtension extends AbstractExtension
 {
-    protected $kernel;
+    private $kernel;
 
     /**
      * Constructor.
@@ -31,34 +30,15 @@ class TridentRuntimeExtension extends AbstractExtension
      */
     public function __construct(AbstractKernel $kernel)
     {
-        parent::__construct();
+        $runtime = (microtime(true) - $kernel->getStartTime()) * 1000;
 
-        $this->kernel  = $kernel;
+        $this->data = [
+            'runtime' => $runtime
+        ];
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getSegment()
+    public function getTemplateName()
     {
-        $this->decorateSegment();
-
-        return parent::getSegment();
-    }
-
-    /**
-     * Decorate this extensions Segment.
-     *
-     * @return Segment
-     */
-    protected function decorateSegment()
-    {
-        $runtime = (microtime(true) - $this->kernel->getStartTime()) * 1000;
-
-        $this->segment->setBaseName('Runtime');
-        $this->segment->setBaseValue(round($runtime, 2));
-        $this->segment->setBaseUnit('ms');
-
-        return $this->segment;
+        return 'TridentDebugModule:Toolbar/Extension:runtime.html.twig';
     }
 }

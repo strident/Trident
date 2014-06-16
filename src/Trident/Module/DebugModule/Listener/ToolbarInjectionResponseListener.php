@@ -13,6 +13,7 @@ namespace Trident\Module\DebugModule\Listener;
 
 use Trident\Component\Debug\Toolbar\Toolbar;
 use Trident\Component\HttpKernel\Event\FilterResponseEvent;
+use Trident\Component\Templating\Engine\DelegatingEngine;
 
 /**
  * Debug Toolbar Response Listener
@@ -21,15 +22,17 @@ use Trident\Component\HttpKernel\Event\FilterResponseEvent;
  */
 class ToolbarInjectionResponseListener
 {
-    protected $toolbar;
+    private $engine;
+    private $toolbar;
 
     /**
      * Constructor.
      *
      * @param Toolbar $toolbar
      */
-    public function __construct(Toolbar $toolbar)
+    public function __construct(DelegatingEngine $engine, Toolbar $toolbar)
     {
+        $this->engine = $engine;
         $this->toolbar = $toolbar;
     }
 
@@ -47,7 +50,9 @@ class ToolbarInjectionResponseListener
         if (false !== strpos($content, '</body>')) {
             // This needs to be refactored into another class, it also needs to
             // be extendable. I.e. register new 'sections' in the debug info.
-            $debug = $this->toolbar->getHtml();
+            $debug = $this->engine->render('TridentDebugModule:Toolbar:toolbar.html.twig', [
+                'extensions' => $this->toolbar->getExtensions()
+            ]);
             $debug.= PHP_EOL.'</body>';
 
             $content = str_replace('</body>', $debug, $content);

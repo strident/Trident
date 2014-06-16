@@ -32,12 +32,13 @@ class TwigEngine implements EngineInterface
     public function __construct(TwigFileLoader $loader, array $options)
     {
         $this->environment = new \Twig_Environment($loader, $options);
+        $this->environment->addExtension(new \Twig_Extension_Debug());
     }
 
     /**
      * {@inheritDoc}
      */
-    public function render($template, array $parameters = null)
+    public function render($template, array $parameters = array())
     {
         return $this->environment->render($template, $parameters);
     }

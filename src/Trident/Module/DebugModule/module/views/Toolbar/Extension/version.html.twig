@@ -1,0 +1,13 @@
+{% extends 'TridentDebugModule:Toolbar:toolbar-item.html.twig' %}
+
+{% block label %}
+    <img alt="" width="24" height="24" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAANlBMVEUAAAD////////////////////////////////////////////////////////////////////xY8b8AAAAEXRSTlMAqr1HWoEtlQxu1hw5yOID8tZpAZgAAAENSURBVDjLlVPRjsMgDAs0KYQOVv//z15DpkMd6KrzAxuy28S2Sv/Fvj8IRB4EpfxBvogykO3PEu9EtAEbUXovBRouCrhkQVd8NiqWEk2WF4IEtTPZu5AWAfTpFAL1TeY4InBcP7VexwFEmnDAdm/N/Jh2Ap92AnaevBCEOAQ1LGJCIk+yO3rPOUN9vaP7nNMWsJl1gwyZazTGuzDdvdQxnAEet4HO9MIAdTM8NVF8E59epjaA4DpnAjBVJU64UL7r0s/QCtTPSjrYTng0DWgeG+qXSS8QF7zau9HN7pvE0wRRtmzK7WYSxg2EYnbGhIYZMf7SavcWk6gys6qk2J/Q7D0n4T3PX8HOkl70jB81gw7F5MtbdgAAAABJRU5ErkJggg==" />
+    <span>&nbsp;&nbsp;v{{ data.version }}</span>
+{% endblock %}
+
+{% block panel %}
+    <div class="trt-panel-item">
+        <strong>Trident</strong>
+        <span>v{{ data.version }}</span>
+    </div>
+{% endblock %}

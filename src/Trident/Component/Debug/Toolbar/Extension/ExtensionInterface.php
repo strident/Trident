@@ -21,6 +21,13 @@ use Trident\Component\Debug\Toolbar\SegmentInterface;
 interface ExtensionInterface
 {
     /**
+     * Get the extension data.
+     *
+     * @return array
+     */
+    public function getData();
+
+    /**
      * Get the extension name.
      *
      * @return string
@@ -28,9 +35,9 @@ interface ExtensionInterface
     public function getName();
 
     /**
-     * Get segment.
+     * Get the extension template name.
      *
-     * @return SegmentInterface
+     * @return string
      */
-    public function getSegment();
+    public function getTemplateName();
 }

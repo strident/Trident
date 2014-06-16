@@ -1,0 +1,12 @@
+{% extends 'TridentDebugModule:Toolbar:toolbar-item.html.twig' %}
+
+{% block label %}
+    <span><strong>Runtime</strong> {{ '%.1f'|format(data.runtime) }} ms</span>
+{% endblock %}
+
+{% block panel %}
+    <div class="trt-panel-item">
+        <strong>Runtime</strong>
+        <span>{{ '%.1f'|format(data.runtime) }} ms</span>
+    </div>
+{% endblock %}

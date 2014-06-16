@@ -46,6 +46,7 @@ class ToolbarControllerListener
 
         $this->extension->setController($controller);
         $this->extension->setAction($action);
+        $this->extension->buildData();
     }
 
     /**
@@ -56,6 +57,7 @@ class ToolbarControllerListener
     public function onResponse(FilterResponseEvent $event)
     {
         $this->extension->setStatusCode($event->getResponse()->getStatusCode());
+        $this->extension->buildData();
     }
 
     /**

@@ -95,7 +95,7 @@ class DelegatingEngine implements EngineInterface
     /**
      * {@inheritDoc}
      */
-    public function render($template, array $parameters = null)
+    public function render($template, array $parameters = array())
     {
         $engine = $this->resolveEngine($template);
 

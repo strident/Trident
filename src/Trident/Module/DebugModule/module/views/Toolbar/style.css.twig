@@ -1,0 +1,94 @@
+.trt-toolbar {
+    background-color: #2b303b;
+    bottom: 0;
+    color: #eff1f5;
+    font: 11px/normal "Helvetica Neue", Helvetica, Arial, sans-serif;
+    height: 40px;
+    left: 0;
+    opacity: 0.3;
+    position: fixed;
+    right: 0;
+}
+.trt-toolbar:hover {
+    opacity: 1;
+}
+.trt-toolbar img {
+    border-width: 0;
+    margin-top: -2px;
+    vertical-align: middle;
+}
+.trt-toolbar .trt-label {
+    background-color: #eff1f5;
+    border-radius: 3px;
+    color: #2b303b;
+    padding: 4px;
+}
+.trt-toolbar .trt-label-red {
+    background-color: #bf616a;
+}
+.trt-toolbar .trt-label-orange {
+    background-color: #d08770;
+}
+.trt-toolbar .trt-label-yellow {
+    background-color: #ebcb8b;
+}
+.trt-toolbar .trt-label-green {
+    background-color: #a3be8c;
+}
+.trt-toolbar .trt-label-cyan {
+    background-color: #96b5b4;
+}
+.trt-toolbar .trt-label-blue {
+    background-color: #8fa1b3;
+}
+.trt-toolbar .trt-label-purple {
+    background-color: #b48ead;
+}
+.trt-toolbar .trt-label-brown {
+    background-color: #ab7967;
+}
+.trt-toolbar .trt-segments {
+    display: inline-block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.trt-toolbar .trt-segment {
+    border-right: 1px solid #343d46;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px;
+    position: relative;
+}
+.trt-toolbar .trt-segment .trt-segment-panel {
+    background-color: #343d46;
+    border-radius: 3px 3px 0 0;
+    bottom: 40px;
+    box-sizing: border-box;
+    display: none;
+    left: -1px;
+    line-height: normal;
+    padding: 10px;
+    position: absolute;
+    white-space: nowrap;
+    z-index: 10001;
+}
+.trt-toolbar .trt-segment:hover .trt-segment-panel {
+    display: block;
+}
+.trt-toolbar .trt-segment .trt-segment-panel strong {
+    display: inline-block;
+    width: 110px;
+}
+.trt-toolbar .trt-segment .trt-segment-panel span {
+    display: inline-block;
+}
+.trt-toolbar .trt-segment .trt-segment-panel .trt-panel-item {
+    margin-bottom: 8px;
+}
+.trt-toolbar .trt-segment .trt-segment-panel .trt-panel-item:last-child {
+    margin-bottom: 0;
+}

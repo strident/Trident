@@ -3,7 +3,6 @@
 namespace Trident\Module\DebugModule\Toolbar\Extension;
 
 use Trident\Component\Debug\Toolbar\Extension\AbstractExtension;
-use Trident\Component\Debug\Toolbar\Segment;
 use Trident\Component\HttpKernel\AbstractKernel;
 
 /**
@@ -13,26 +12,18 @@ use Trident\Component\HttpKernel\AbstractKernel;
  */
 class TridentVersionExtension extends AbstractExtension
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function getSegment()
+    public function __construct()
     {
-        $this->decorateSegment();
-
-        return parent::getSegment();
+        $this->data = [
+            'version' => AbstractKernel::VERSION
+        ];
     }
 
     /**
-     * Decorate this extensions Segment.
-     *
-     * @return Segment
+     * {@inheritDoc}
      */
-    protected function decorateSegment()
+    public function getTemplateName()
     {
-        $this->segment->setBaseName('Version');
-        $this->segment->setBaseValue('v'.AbstractKernel::VERSION);
-
-        return $this->segment;
+        return 'TridentDebugModule:Toolbar/Extension:version.html.twig';
     }
 }

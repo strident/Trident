@@ -1,0 +1,12 @@
+{% extends 'TridentDebugModule:Toolbar:toolbar-item.html.twig' %}
+
+{% block label %}
+    <span><strong>Memory</strong> {{ '%.1f'|format(data.memory / 1024 / 1024) }} MB</span>
+{% endblock %}
+
+{% block panel %}
+    <div class="trt-panel-item">
+        <strong>Memory usage</strong>
+        <span>{{ '%.1f'|format(data.memory / 1024 / 1024) }} / {{ data.memoryLimit == -1 ? '&infin;' : '%.1f'|format(data.memoryLimit / 1024 / 1024) }} MB</span>
+    </div>
+{% endblock %}
