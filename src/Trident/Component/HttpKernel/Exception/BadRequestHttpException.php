@@ -14,11 +14,11 @@ namespace Trident\Component\HttpKernel\Exception;
 use Trident\Component\HttpKernel\Exception\HttpException;
 
 /**
- * Not Found Http Exception
+ * Bad Request Http Exception
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class NotFoundHttpException extends HttpException
+class BadRequestHttpException extends HttpException
 {
     /**
      * Constructor.
@@ -29,6 +29,6 @@ class NotFoundHttpException extends HttpException
      */
     public function __construct($message, \Exception $previous = null, $code = 0)
     {
-        parent::__construct(404, $message, $previous, [], $code);
+        parent::__construct(400, $message, $previous, [], $code);
     }
 }

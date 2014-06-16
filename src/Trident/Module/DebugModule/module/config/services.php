@@ -5,7 +5,6 @@ use Trident\Component\HttpKernel\KernelEvents;
 return function($container) {
     // Parameters
     $container['debug.listener.toolbar_controller.class']    = 'Trident\\Module\\DebugModule\\Listener\\ToolbarControllerListener';
-    $container['debug.listener.exception.class']             = 'Trident\\Module\\DebugModule\\Listener\\ExceptionListener';
     $container['debug.listener.toolbar_injection.class']     = 'Trident\\Module\\DebugModule\\Listener\\ToolbarInjectionResponseListener';
     $container['debug.toolbar.extension.controller.class']   = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentControllerExtension';
     $container['debug.toolbar.extension.memory_usage.class'] = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentMemoryUsageExtension';
@@ -17,10 +16,6 @@ return function($container) {
     // Services
     $container->set('debug.listener.toolbar_controller', function($c) {
         return new $c['debug.listener.toolbar_controller.class']($c->get('debug.toolbar.extension.controller'));
-    });
-
-    $container->set('debug.listener.exception', function($c) {
-        return new $c['debug.listener.exception.class']();
     });
 
     $container->set('debug.listener.toolbar_injection', function($c) {
@@ -60,8 +55,9 @@ return function($container) {
 
     $container->extend('event_dispatcher', function($dispatcher, $c) {
         $dispatcher->addListener(KernelEvents::CONTROLLER, [$c->get('debug.listener.toolbar_controller'), 'onController']);
-        $dispatcher->addListener(KernelEvents::EXCEPTION, [$c->get('debug.listener.exception'), 'onException']);
         $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_controller'), 'onResponse']);
+
+        // Must be placed after some of the other events
         $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_injection'), 'onResponse']);
 
         return $dispatcher;

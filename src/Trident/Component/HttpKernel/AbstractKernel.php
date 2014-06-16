@@ -13,6 +13,7 @@ namespace Trident\Component\HttpKernel;
 
 use Phimple\Container;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Trident\Component\Configuration\Configuration;
 use Trident\Component\HttpFoundation\Request;
@@ -42,6 +43,7 @@ abstract class AbstractKernel implements HttpKernelInterface
     protected $name;
     protected $request;
     protected $rootDir;
+    protected $session;
     protected $startTime;
 
     const VERSION         = '0.0.1-alpha';
@@ -211,6 +213,7 @@ abstract class AbstractKernel implements HttpKernelInterface
     {
         $this->initialiseConfiguration();
         $this->initialiseModules();
+        $this->initialiseSession();
         $this->initialiseContainer();
 
         foreach ($this->modules as $module) {
@@ -385,6 +388,21 @@ abstract class AbstractKernel implements HttpKernelInterface
     }
 
     /**
+     * Initialise the session, and attach it to the request.
+     *
+     * @return Session
+     */
+    protected function initialiseSession()
+    {
+        $session = new Session();
+        $session->start();
+
+        $this->request->setSession($session);
+
+        return $this->session = $session;
+    }
+
+    /**
      * Builds the service container.
      *
      * @return Container
@@ -423,6 +441,7 @@ abstract class AbstractKernel implements HttpKernelInterface
         $container->set('kernel', $this);
         $container->set('configuration', $this->configuration);
         $container->set('request', $this->request);
+        $container->set('session', $this->session);
 
         foreach ($this->modules as $module) {
             $module->registerServices($container);
