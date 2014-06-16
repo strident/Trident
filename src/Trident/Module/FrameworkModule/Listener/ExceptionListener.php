@@ -220,7 +220,7 @@ TRC;
             }
 
             .pre-message {
-                font: 18px/30px "Ubuntu Mono", monospace;
+                font: 16px/24px "Ubuntu Mono", monospace;
                 position: relative;
                 margin-left: -75px;
             }
