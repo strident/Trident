@@ -90,13 +90,18 @@ EOF;
      */
     private function getMessageHtml()
     {
-        if ($this->exception instanceof HttpExceptionInterface && 404 === $this->exception->getStatusCode()) {
-            $method = 'onPageNotFound';
-        } else {
-            $method = 'onException';
-        }
+        $method     = 'onException';
+        $statusCode = 500;
 
-        $statusCode = $this->exception->getStatusCode() ? $this->exception->getStatusCode() : 500;
+        if ($this->exception instanceof HttpExceptionInterface) {
+            if (404 === $this->exception->getStatusCode()) {
+                $method = 'onPageNotFound';
+            }
+
+            if ($this->exception->getStatusCode()) {
+                $statusCode = $this->exception->getStatusCode();
+            }
+        }
 
         return <<<MSG
         <div class="pre-esque">
