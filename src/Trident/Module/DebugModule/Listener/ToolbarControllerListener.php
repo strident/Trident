@@ -13,6 +13,7 @@ namespace Trident\Module\DebugModule\Listener;
 
 use Trident\Component\HttpKernel\Event\FilterControllerEvent;
 use Trident\Component\HttpKernel\Event\FilterResponseEvent;
+use Trident\Component\HttpKernel\HttpKernelInterface;
 use Trident\Module\DebugModule\Toolbar\Extension\TridentControllerExtension;
 
 /**
@@ -41,6 +42,10 @@ class ToolbarControllerListener
      */
     public function onController(FilterControllerEvent $event)
     {
+        if (HttpKernelInterface::SUB_REQUEST === $event->getRequestType()) {
+            return;
+        }
+
         $controller = $this->getClassName($event->getController()[0]);
         $action     = $event->getController()[1];
 

@@ -45,6 +45,10 @@ class ControllerResolver
      */
     public function getController(Request $request, array $matched)
     {
+        if (null !== $request->attributes->get('_controller')) {
+            return $this->createController($request->attributes->get('_controller'));
+        }
+
         if ( ! $controller = $matched['_controller']) {
             throw new \InvalidArgumentException('Unable to look for controller as the "_controller" parameter is missing');
         }

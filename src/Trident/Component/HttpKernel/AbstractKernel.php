@@ -72,11 +72,10 @@ abstract class AbstractKernel implements HttpKernelInterface
      *
      * @param  Request $request
      * @param  string  $type
-     * @param  boolean $catch
      *
      * @return Response
      */
-    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
+    public function handle(Request $request, $type = self::MASTER_REQUEST)
     {
         $this->request = $request;
 
@@ -91,22 +90,14 @@ abstract class AbstractKernel implements HttpKernelInterface
             return $event->getResponse();
         }
 
-        $matcher  = $this->container->get('route_matcher');
-        $resolver = $this->container->get('controller_resolver');
-
+        // Match the route to a controller
         try {
-            // Attempt to find the route from the request
-            $path    = parse_url($request->query->get('_url'), PHP_URL_PATH);
-            $matched = $matcher->match($path);
-        } catch (ResourceNotFoundException $e) {
-            // If no route is found, throw handle a 404 exception
-            $notFoundException = new NotFoundHttpException(sprintf(
-                'No route found for path "%s".',
-                $request->generateRelative()
-            ));
-
-            return $this->handleException($notFoundException, $request, $type);
+            $matched = $this->matchRoute($request, $type);
+        } catch (NotFoundHttpException $e) {
+            return $this->handleException($e, $request, $type);
         }
+
+        $resolver = $this->container->get('controller_resolver');
 
         $controller = $resolver->getController($request, $matched);
         $arguments  = $resolver->getArguments($request, $controller, $matched);
@@ -175,6 +166,37 @@ abstract class AbstractKernel implements HttpKernelInterface
         } catch (\Exception $e) {
             return $response;
         }
+    }
+
+    /**
+     * Match a route to a controller.
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    protected function matchRoute(Request $request, $type)
+    {
+        $matcher = $this->container->get('route_matcher');
+
+        if ( ! $request->attributes->has('_controller')) {
+            try {
+                // Attempt to find the route from the request
+                $path    = parse_url($request->query->get('_url'), PHP_URL_PATH);
+                $matched = $matcher->match($path);
+            } catch (ResourceNotFoundException $e) {
+                // If no route is found, throw handle a 404 exception
+                throw new NotFoundHttpException(sprintf(
+                    'No route found for path "%s".',
+                    $request->generateRelative()
+                ));
+            }
+        } else {
+            // This will usually be the case if a kernel exception is thrown
+            $matched = ['_controller' => $request->attributes->get('_controller')];
+        }
+
+        return $matched;
     }
 
     /**

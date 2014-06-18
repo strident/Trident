@@ -1,12 +1,9 @@
 <?php
 
-use Trident\Component\HttpKernel\KernelEvents;
-
 return function($container) {
     // Parameters
     $container['controller_resolver.class'] = 'Trident\\Component\\HttpKernel\\Controller\\ControllerResolver';
     $container['event_dispatcher.class']    = 'Symfony\\Component\\EventDispatcher\\EventDispatcher';
-    $container['listener.exception.class']  = 'Trident\\Module\\FrameworkModule\\Listener\\ExceptionListener';
     $container['route_collection.class']    = 'Symfony\\Component\\Routing\\RouteCollection';
     $container['route_context.class']       = 'Symfony\\Component\\Routing\\RequestContext';
     $container['route_matcher.class']       = 'Symfony\\Component\\Routing\\Matcher\\UrlMatcher';
@@ -20,10 +17,6 @@ return function($container) {
 
     $container->set('event_dispatcher', function($c) {
         return new $c['event_dispatcher.class']();
-    });
-
-    $container->set('listener.exception', function($c) {
-        return new $c['listener.exception.class']();
     });
 
     $container->set('route_collection', function($c) {
@@ -41,12 +34,5 @@ return function($container) {
         $context = $c->get('route_context');
 
         return new $c['route_matcher.class']($routes, $context);
-    });
-
-    // Extensions
-    $container->extend('event_dispatcher', function($dispatcher, $c) {
-        $dispatcher->addListener(KernelEvents::EXCEPTION, [$c->get('listener.exception'), 'onException']);
-
-        return $dispatcher;
     });
 };

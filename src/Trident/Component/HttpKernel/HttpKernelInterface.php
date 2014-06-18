@@ -27,13 +27,12 @@ interface HttpKernelInterface
     /**
      * Handles a Request to convert it to a Response.
      *
-     * @param  Request $request [description]
-     * @param  integer $type    [description]
-     * @param  boolean $catch   [description]
+     * @param  Request $request
+     * @param  integer $type
      *
      * @return Response
      *
      * @throws \Exception
      */
-    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true);
+    public function handle(Request $request, $type = self::MASTER_REQUEST);
 }

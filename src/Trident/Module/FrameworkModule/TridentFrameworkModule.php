@@ -38,8 +38,10 @@ class TridentFrameworkModule extends AbstractModule
     {
         $services = require __DIR__.'/module/config/services.php';
         $cache    = require __DIR__.'/module/config/services_cache.php';
+        $error    = require __DIR__.'/module/config/services_error.php';
 
         call_user_func($services, $container);
         call_user_func($cache, $container);
+        call_user_func($error, $container);
     }
 }
