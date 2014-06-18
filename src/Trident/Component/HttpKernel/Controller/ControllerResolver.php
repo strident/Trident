@@ -99,11 +99,14 @@ class ControllerResolver
     public function getArguments(Request $request, array $controller, array $matched)
     {
         $reflection = new \ReflectionMethod($controller[0], $controller[1]);
+        $attributes = $request->attributes->all();
         $arguments  = [];
 
         foreach ($reflection->getParameters() as $param) {
             if (array_key_exists($param->name, $matched)) {
                 $arguments[] = $matched[$param->name];
+            } elseif (array_key_exists($param->name, $attributes)) {
+                $arguments[] = $attributes[$param->name];
             } elseif ($param->isDefaultValueAvailable()) {
                 $arguments[] = $param->getDefaultValue();
             } else {

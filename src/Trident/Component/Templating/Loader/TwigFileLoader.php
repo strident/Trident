@@ -39,11 +39,11 @@ class TwigFileLoader implements \Twig_LoaderInterface
     {
         $path = $this->resolver->resolve($name)->getPath();
 
-        if (file_exists($path)) {
-            return file_get_contents($path);
+        if ( ! file_exists($path)) {
+            throw new \Exception(sprintf('Templat "%s" not found.', $name));
         }
 
-        return false;
+        return file_get_contents($path);
     }
 
     /**

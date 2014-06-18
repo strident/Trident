@@ -12,28 +12,19 @@
 namespace Trident\Module\FrameworkModule\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Trident\Module\FrameworkModule\Controller\Controller;
 
 /**
  * Exception Controller
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class ExceptionController
+class ExceptionController extends Controller
 {
-    public function exceptionAction()
+    public function exceptionAction($exception)
     {
-        $html = <<<EOF
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>An error has occurred.</title>
-    </head>
-    <body>
-        <p>An error has occurred.</p>
-    </body>
-</html>
-EOF;
+        var_dump($exception);
 
-        return new Response($html, 500);
+        return $this->render('TridentFrameworkModule::exception.html.twig', []);
     }
 }
