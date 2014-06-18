@@ -12,20 +12,48 @@
 namespace Trident\Component\Caching;
 
 use Trident\Component\Caching\Driver\DriverInterface;
+use Trident\Component\Caching\Logging\DebugStack;
 
 /**
- * Caching
+ * Caching wrapper
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class Caching
+class Caching implements DriverInterface
 {
-    protected $driver;
+    private $driver;
+    private $stack;
+
+    /**
+     * Set stack.
+     *
+     * @param DebugStack $stack
+     *
+     * @return Caching
+     */
+    public function setStack(DebugStack $stack)
+    {
+        $this->stack = $stack;
+
+        return $this;
+    }
+
+    /**
+     * Get stack.
+     *
+     * @return DebugStack
+     */
+    public function getStack()
+    {
+        return $this->stack;
+    }
 
     /**
      * Set driver.
      *
      * @param DriverInterface $driver
+     *
+     * @return Caching
      */
     public function setDriver(DriverInterface $driver)
     {
@@ -41,8 +69,52 @@ class Caching
      */
     public function getDriver()
     {
-        // @todo: add something to check if the driver is set
-
         return $this->driver;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function set($key, $value, $expiration = 0)
+    {
+        $this->driver->set($key, $value, $expiration);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function get($key)
+    {
+        if (isset($this->stack) && $this->driver->has($key)) {
+            $this->stack->hit($key);
+        }
+
+        return $this->driver->get($key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function has($key)
+    {
+        return $this->driver->has($key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function remove($key)
+    {
+        return $this->driver->remove($key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function flush()
+    {
+        return $this->driver->flush();
     }
 }

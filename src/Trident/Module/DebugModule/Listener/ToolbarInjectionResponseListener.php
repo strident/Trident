@@ -48,14 +48,11 @@ class ToolbarInjectionResponseListener
         $content  = $response->getContent();
 
         if (false !== strpos($content, '</body>')) {
-            // This needs to be refactored into another class, it also needs to
-            // be extendable. I.e. register new 'sections' in the debug info.
             $debug = $this->engine->render('TridentDebugModule:Toolbar:toolbar.html.twig', [
                 'extensions' => $this->toolbar->getExtensions()
             ]);
-            $debug.= PHP_EOL.'</body>';
 
-            $content = str_replace('</body>', $debug, $content);
+            $content = str_replace('</body>', $debug.PHP_EOL.'</body>', $content);
 
             $response->setContent($content);
         }

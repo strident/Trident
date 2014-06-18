@@ -2,15 +2,12 @@
     background-color: #2b303b;
     bottom: 0;
     color: #eff1f5;
-    font: 11px/normal "Helvetica Neue", Helvetica, Arial, sans-serif;
-    height: 40px;
+    font: 12px/normal "Helvetica Neue", Helvetica, Arial, sans-serif;
+    height: 44px;
     left: 0;
-    opacity: 0.3;
+    min-width: 960px;
     position: fixed;
     right: 0;
-}
-.trt-toolbar:hover {
-    opacity: 1;
 }
 .trt-toolbar img {
     border-width: 0;
@@ -19,9 +16,9 @@
 }
 .trt-toolbar .trt-label {
     background-color: #eff1f5;
-    border-radius: 3px;
+    border-radius: 4px;
     color: #2b303b;
-    padding: 4px;
+    padding: 4px 6px;
 }
 .trt-toolbar .trt-label-red {
     background-color: #bf616a;
@@ -54,34 +51,41 @@
     padding: 0;
 }
 .trt-toolbar .trt-segment {
-    border-right: 1px solid #343d46;
     cursor: pointer;
     display: block;
     float: left;
-    height: 40px;
-    line-height: 40px;
+    height: 44px;
+    line-height: 44px;
     padding: 0 10px;
     position: relative;
 }
 .trt-toolbar .trt-segment .trt-segment-panel {
     background-color: #343d46;
     border-radius: 3px 3px 0 0;
-    bottom: 40px;
+    bottom: 44px;
     box-sizing: border-box;
     display: none;
-    left: -1px;
+    left: 0;
     line-height: normal;
     padding: 10px;
     position: absolute;
     white-space: nowrap;
     z-index: 10001;
 }
+.trt-toolbar .trt-segment:last-child .trt-segment-panel {
+    left: auto;
+    right: 0;
+}
+.trt-toolbar .trt-segment:hover {
+    background-color: #343d46;
+    display: block;
+}
 .trt-toolbar .trt-segment:hover .trt-segment-panel {
     display: block;
 }
 .trt-toolbar .trt-segment .trt-segment-panel strong {
     display: inline-block;
-    width: 110px;
+    width: 130px;
 }
 .trt-toolbar .trt-segment .trt-segment-panel span {
     display: inline-block;

@@ -14,7 +14,7 @@ namespace Trident\Module\DebugModule\Toolbar\Extension;
 use Trident\Component\Debug\Toolbar\Extension\AbstractExtension;
 
 /**
- * Memory Usage Debug Toolbar Extension
+ * Controller Debug Toolbar Extension
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */

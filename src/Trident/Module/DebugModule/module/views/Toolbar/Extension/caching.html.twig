@@ -1,0 +1,15 @@
+{% extends 'TridentDebugModule:Toolbar:toolbar-item.html.twig' %}
+
+{% block label %}
+    <span>
+        <strong>Cache</strong>
+        <span class="trt-label">{{ data.hits|default(0) }}</span>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <div class="trt-panel-item">
+        <strong>No. of Hits</strong>
+        <span>{{ data.hits|default(0) }}</span>
+    </div>
+{% endblock %}

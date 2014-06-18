@@ -13,14 +13,15 @@ namespace Trident\Component\Caching;
 
 use Phimple\ContainerInterface;
 use Trident\Component\Caching\Driver\DriverInterface;
+use Trident\Component\Caching\Logging\DebugStack;
 use Trident\Component\Configuration\ConfigurationInterface;
 
 /**
- * Cache Driver Factory
+ * Caching Factory
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class CacheDriverFactory
+class CachingFactory
 {
     protected $configuration;
     protected $container;
@@ -65,15 +66,23 @@ class CacheDriverFactory
      */
     public function build($name = null)
     {
+        $caching = new Caching();
+        $caching->setStack(new DebugStack());
+
         if ($this->debug && isset($this->debugDriver)) {
-            return $this->resolveDriver($this->debugDriver);
+            $caching->setDriver($this->resolveDriver($this->debugDriver));
+
+            return $caching;
         }
 
         if (null === $name) {
             $name = $this->configuration->get('caching.default', 'null');
         }
 
-        return $this->resolveDriver($name);
+        $driver = $this->resolveDriver($name);
+        $caching->setDriver($driver);
+
+        return $caching;
     }
 
     /**

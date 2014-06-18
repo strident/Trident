@@ -2,10 +2,9 @@
 
 return function($container) {
     // Parameters
-    $container['caching.class']                  = 'Trident\\Component\\Caching\\Caching';
     $container['caching.driver.memcached.class'] = 'Trident\\Component\\Caching\\Driver\\MemcachedCacheDriver';
     $container['caching.driver.null.class']      = 'Trident\\Component\\Caching\\Driver\\NullCacheDriver';
-    $container['caching.factory.class']          = 'Trident\\Component\\Caching\\CacheDriverFactory';
+    $container['caching.factory.class']          = 'Trident\\Component\\Caching\\CachingFactory';
     $container['caching.proxy']                  = 'Trident\\Component\\Caching\\CachingProxy';
 
 

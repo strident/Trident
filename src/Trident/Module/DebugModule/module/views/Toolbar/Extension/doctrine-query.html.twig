@@ -1,0 +1,19 @@
+{% extends 'TridentDebugModule:Toolbar:toolbar-item.html.twig' %}
+
+{% block label %}
+    <span>
+        <strong>DB</strong>
+        <span class="trt-label">{{ data.count|default(0) }}</span> in {{ '%.1f'|format(data.time) }} ms
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <div class="trt-panel-item">
+        <strong>No. of Queries</strong>
+        <span>{{ data.count|default(0) }}</span>
+    </div>
+    <div class="trt-panel-item">
+        <strong>Total Execution Time</strong>
+        <span>{{ '%.1f'|format(data.time) }} ms</span>
+    </div>
+{% endblock %}

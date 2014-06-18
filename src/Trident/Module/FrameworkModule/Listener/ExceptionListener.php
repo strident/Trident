@@ -64,7 +64,7 @@ class ExceptionListener
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="robots" content="noindex,nofollow" />
         <title>{$title}</title>
-        <link href='//fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
         <style type="text/css">
 {$this->getCss()}
         </style>
@@ -220,7 +220,7 @@ TRC;
             }
 
             .pre-message {
-                font: 16px/24px "Ubuntu Mono", monospace;
+                font: 16px/24px Inconsolata, monospace;
                 position: relative;
                 margin-left: -75px;
             }
@@ -263,7 +263,7 @@ TRC;
 
             .trace {
                 color: #65737e;
-                font: 12px/14px "Ubuntu Mono", monospace;
+                font: 14px/14px Inconsolata, monospace;
             }
 
             .copyright {
