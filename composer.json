@@ -16,6 +16,7 @@
         "doctrine/common": "2.4.2",
         "doctrine/dbal": "2.4.2",
         "doctrine/orm": "2.4.2",
+        "kriswallsmith/assetic": "1.1.*",
         "psr/log": "~1.0",
         "strident/phimple": "2.0.*",
         "symfony/console": "2.5.*",

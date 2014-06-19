@@ -74,4 +74,14 @@ class Application extends BaseApplication
             $module->registerCommands($this);
         }
     }
+
+    /**
+     * Get the kernel.
+     *
+     * @return AbstractKernel
+     */
+    public function getKernel()
+    {
+        return $this->kernel;
+    }
 }

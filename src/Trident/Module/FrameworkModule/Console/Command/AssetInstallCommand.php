@@ -16,6 +16,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * Module asset install command
@@ -24,38 +26,65 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class AssetInstallCommand extends Command
 {
+    /**
+     * {@inheritDoc}
+     */
     protected function configure()
     {
-        $this
-            ->setName('assets:install')
-            ->setDescription('Install Trident module assets.')
-            ->addArgument(
-                'name',
-                InputArgument::OPTIONAL,
-                'Who do you want to greet?'
-            )
-            ->addOption(
-               'yell',
-               null,
-               InputOption::VALUE_NONE,
-               'If set, the task will yell in uppercase letters'
-            )
-        ;
+        // Meta
+        $this->setName('assets:install');
+        $this->setDescription('Install assets from modules registered in Trident.');
+
+        // Arguments
+        $this->addArgument('name', InputArgument::OPTIONAL, 'Module to install assets for.');
+
+        // Options
+        // '-s|--symlink' is currently going to be the default / only option.
+        // $this->addOption('symlink', 's', InputOption::VALUE_NONE, 'If set, the assets will be installed via symlink.');
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $name = $input->getArgument('name');
-        if ($name) {
-            $text = 'Hello '.$name;
-        } else {
-            $text = 'Hello';
-        }
+        $kernel  = $this->getApplication()->getKernel();
+        $modules = $kernel->getModules();
 
-        if ($input->getOption('yell')) {
-            $text = strtoupper($text);
-        }
+        $output->writeln(sprintf(
+            'Installing assets for <info>%s</info> modules.',
+            count($modules)
+        ));
 
-        $output->writeln($text);
+        $output->writeln('');
+
+        $filesystem = new FileSystem();
+
+        foreach ($modules as $module) {
+            $output->write(sprintf(
+                'Installing assets for "%s"', $module->getName()
+            ));
+
+            $from = $module->getRootDir().'/module/public';
+            $to   = $kernel->getRootDir().'/../public/modules/'.strtolower($module->getName());
+
+            if ( ! $filesystem->exists($from)) {
+                // If there were no assets to install
+                $output->writeln('... <comment>N/A</comment>');
+
+                // Skip to next module
+                continue;
+            }
+
+            try {
+                $filesystem->symlink($from, $to);
+
+                // If assets were found, and successfully installed:
+                $output->writeln('... <info>Done</info>');
+            } catch(IOExceptionInterface $e) {
+                // If there were any problems installing assets:
+                $output->writeln('... <error>Error</error>');
+            }
+        }
     }
 }
