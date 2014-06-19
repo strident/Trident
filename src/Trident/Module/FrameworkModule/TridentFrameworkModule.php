@@ -16,7 +16,8 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Routing\RouteCollection;
 use Trident\Component\HttpKernel\Module\AbstractModule;
 use Trident\Component\HttpKernel\Module\ConsoleModuleInterface;
-use Trident\Module\FrameworkModule\Console\Command\AssetInstallCommand;
+use Trident\Module\FrameworkModule\Console\Command\AssetsCompileCommand;
+use Trident\Module\FrameworkModule\Console\Command\AssetsInstallCommand;
 
 /**
  * Framework Module
@@ -30,7 +31,8 @@ class TridentFrameworkModule extends AbstractModule implements ConsoleModuleInte
      */
     public function registerCommands(Application $application)
     {
-        $application->add(new AssetInstallCommand());
+        $application->add(new AssetsCompileCommand());
+        $application->add(new AssetsInstallCommand());
     }
 
     /**

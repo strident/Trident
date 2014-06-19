@@ -5,9 +5,9 @@
         <meta name="robots" content="noindex,nofollow" />
         <title>{# {$title} #}</title>
         <link href='//fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
-        <style type="text/css">
-{# {$this->getCss()} #}
-        </style>
+        {% stylesheets 'modules/tridentframeworkmodule/css/style.css' output='css/style.css' %}
+            <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+        {% endstylesheets %}
     </head>
     <body>
         <header class="container logo">

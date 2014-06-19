@@ -50,4 +50,14 @@ class TwigEngine implements EngineInterface
     {
         return 'twig' === $reference->get('engine');
     }
+
+    /**
+     * Get the Twig environment
+     *
+     * @return \Twig_Environment
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
 }
