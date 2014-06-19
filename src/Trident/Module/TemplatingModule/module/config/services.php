@@ -22,8 +22,9 @@ return function($container) {
 
     $container->set('templating.engine.twig', function($c) {
         return new $c['templating.engine.twig.class']($c->get('templating.file_loader.twig'), [
-            'cache' => $c['kernel.debug'] ? false : $c->get('configuration')->get('twig.cache_dir'),
-            'debug' => $c['kernel.debug']
+            'cache'            => $c['kernel.debug'] ? false : $c->get('configuration')->get('twig.cache_dir'),
+            'debug'            => $c['kernel.debug'],
+            'strict_variables' => true
         ]);
     });
 

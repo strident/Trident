@@ -71,7 +71,7 @@ class ExceptionListener
             $handling = false;
 
             // Re-throw the exception from within the kernel.
-            return;
+            throw $e;
         }
 
         $event->setResponse($response);

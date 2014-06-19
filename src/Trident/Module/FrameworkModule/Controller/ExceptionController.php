@@ -12,6 +12,7 @@
 namespace Trident\Module\FrameworkModule\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Trident\Component\HttpKernel\AbstractKernel;
 use Trident\Module\FrameworkModule\Controller\Controller;
 
 /**
@@ -23,8 +24,11 @@ class ExceptionController extends Controller
 {
     public function exceptionAction($exception)
     {
-        var_dump($exception);
+        // $response = new Response();
+        // $response->setStatusCode()
 
-        return $this->render('TridentFrameworkModule::exception.html.twig', []);
+        return $this->render('TridentFrameworkModule:Exception:layout.html.twig', [
+            'version' => AbstractKernel::VERSION
+        ]);
     }
 }
