@@ -20,5 +20,10 @@ use Symfony\Component\Console\Application;
  */
 interface ConsoleModuleInterface
 {
+    /**
+     * Register console commands.
+     *
+     * @param Application $application
+     */
     public function registerCommands(Application $application);
 }
