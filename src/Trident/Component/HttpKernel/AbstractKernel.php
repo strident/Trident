@@ -83,6 +83,9 @@ abstract class AbstractKernel implements HttpKernelInterface
             $this->boot();
         }
 
+        // Attach the current application session to the current request
+        $this->request->setSession($this->getSession());
+
         $event = new InterceptResponseEvent($this, $request, $type);
         $this->getDispatcher()->dispatch(KernelEvents::REQUEST, $event);
 
@@ -231,7 +234,7 @@ abstract class AbstractKernel implements HttpKernelInterface
     /**
      * Boot the application. Initialise all of the components.
      */
-    protected function boot()
+    public function boot()
     {
         $this->initialiseConfiguration();
         $this->initialiseModules();
@@ -352,11 +355,6 @@ abstract class AbstractKernel implements HttpKernelInterface
         return $this->container->get('event_dispatcher');
     }
 
-    public function getModule($name)
-    {
-        return $this->modules[$name];
-    }
-
     /**
      * Initialise the application configuration
      *
@@ -410,6 +408,28 @@ abstract class AbstractKernel implements HttpKernelInterface
     }
 
     /**
+     * Get a module.
+     *
+     * @param string $name
+     *
+     * @return AbstractModule
+     */
+    public function getModule($name)
+    {
+        return $this->modules[$name];
+    }
+
+    /**
+     * Get the modules/
+     *
+     * @return array
+     */
+    public function getModules()
+    {
+        return $this->modules;
+    }
+
+    /**
      * Initialise the session, and attach it to the request.
      *
      * @return Session
@@ -419,9 +439,17 @@ abstract class AbstractKernel implements HttpKernelInterface
         $session = new Session();
         $session->start();
 
-        $this->request->setSession($session);
-
         return $this->session = $session;
+    }
+
+    /**
+     * Get the application session.
+     *
+     * @return Session
+     */
+    protected function getSession()
+    {
+        return $this->session;
     }
 
     /**

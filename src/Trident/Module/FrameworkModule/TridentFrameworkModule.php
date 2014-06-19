@@ -12,22 +12,33 @@
 namespace Trident\Module\FrameworkModule;
 
 use Phimple\Container;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Routing\RouteCollection;
 use Trident\Component\HttpKernel\Module\AbstractModule;
+use Trident\Component\HttpKernel\Module\ConsoleModuleInterface;
+use Trident\Module\FrameworkModule\Console\Command\AssetInstallCommand;
 
 /**
  * Framework Module
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class TridentFrameworkModule extends AbstractModule
+class TridentFrameworkModule extends AbstractModule implements ConsoleModuleInterface
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function registerCommands(Application $application)
+    {
+        $application->add(new AssetInstallCommand());
+    }
+
     /**
      * {@inheritDoc}
      */
     public function registerRoutes(RouteCollection $collection)
     {
-        $routes     = require __DIR__.'/module/config/routes.php';
+        $routes = require __DIR__.'/module/config/routes.php';
         call_user_func($routes, $collection);
     }
 
