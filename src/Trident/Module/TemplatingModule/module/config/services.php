@@ -26,7 +26,6 @@ return function($container) {
         $factory = new $c['templating.assetic.factory.class']($assets);
         $factory->setAssetManager($c->get('templating.assetic.asset_manager'));
         $factory->setFilterManager($c->get('templating.assetic.filter_manager'));
-        $factory->setDebug($c['kernel.debug']);
 
         return $factory;
     });

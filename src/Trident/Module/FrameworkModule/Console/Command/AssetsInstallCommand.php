@@ -29,7 +29,7 @@ class AssetsInstallCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function configure()
+    public function configure()
     {
         // Meta
         $this->setName('assets:install');
@@ -47,7 +47,7 @@ class AssetsInstallCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output)
     {
         $kernel  = $this->getApplication()->getKernel();
         $modules = $kernel->getModules();

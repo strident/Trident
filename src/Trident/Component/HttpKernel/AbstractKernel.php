@@ -503,7 +503,7 @@ abstract class AbstractKernel implements HttpKernelInterface
      *
      * @return Container
      */
-    private function getContainer()
+    public function getContainer()
     {
         return $this->container;
     }
