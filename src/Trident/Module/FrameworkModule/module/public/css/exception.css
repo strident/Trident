@@ -1,0 +1,138 @@
+/*!
+ * This file is part of Trident.
+ *
+ * (c) Elliot Wright <elliot@elliotwright.co>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+body {
+    background-color: #272b35;
+    color: #eff1f5;
+    font: 300 15px/20px Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #eff1f5;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+abbr {
+    cursor: pointer;
+}
+
+.tre-mono {
+    font-family: Inconsolata, monospace;
+}
+
+.container {
+    margin: 0 auto 30px;
+    width: 960px;
+}
+
+header,
+footer {
+    padding: 30px;
+}
+
+.logo img {
+    display: block;
+    height: 100px;
+    margin: 30px auto 0;
+    width: 100px;
+}
+
+.pre-esque {
+    background: #343d46;
+    position: relative;
+}
+
+.pre-esque:before {
+    position: absolute;
+    right: 0;
+    width: 50%;
+    top: 0;
+    bottom: 0;
+    content: ' ';
+    background: #2b303b;
+}
+
+.pre-container {
+    background: #2b303b;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 30px;
+    position: relative;
+}
+
+.pre-message {
+    font: 16px/24px Inconsolata, monospace;
+    position: relative;
+    margin-left: -75px;
+}
+
+.pre-message .line {
+    counter-increment: linenumber;
+    display: block;
+}
+
+.pre-message .line:before {
+    color: #65737e;
+    content: counter(linenumber);
+    margin-right: 80px;
+}
+
+.pre-message .comment {
+    color: #65737e;
+}
+
+.pre-message .function {
+    color: #8fa1b3;
+}
+
+.pre-message .keyword {
+    color: #d08770;
+}
+
+.pre-message .method {
+    color: #b48ead;
+}
+
+.pre-message .number {
+    color: #bf616a;
+}
+
+.pre-message .string {
+    color: #a3be8c;
+}
+
+.tre-trace {
+    font-size: 14px;
+}
+
+    .tre-trace .tre-trace-row {
+        counter-increment: tre-tracenumber;
+        display: block;
+        margin: 0 0 10px;
+        position: relative;
+    }
+
+    .tre-trace .tre-trace-row:before {
+        content: counter(tre-tracenumber);
+    }
+
+.tre-syntax-comment {
+    color: #65737e;
+}
+
+.copyright {
+    color: #65737e;
+    font-size: 13px;
+    text-align: center;
+}

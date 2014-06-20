@@ -14,6 +14,7 @@ namespace Trident\Module\FrameworkModule\Console\Command;
 use Assetic\AssetWriter;
 use Assetic\Extension\Twig\TwigFormulaLoader;
 use Assetic\Extension\Twig\TwigResource;
+use Assetic\Factory\AssetFactory;
 use Assetic\Factory\LazyAssetManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -48,31 +49,23 @@ class AssetsCompileCommand extends Command
     {
         $kernel    = $this->getApplication()->getKernel();
         $container = $kernel->getContainer();
-        $modules   = $kernel->getModules();
         $publicDir = $kernel->getRootDir().'/../public';
 
         // Print header
-        $output->writeln(sprintf('Compiling assets for <info>%s</info> modules.', count($modules)));
         $output->writeln(sprintf('The current environment is <comment>"%s"</comment>.', $container['kernel.environment']));
         $output->writeln(sprintf('Debug mode is <comment>%s</comment>.', $container['kernel.debug'] ? 'on' : 'off'));
         $output->writeln('');
 
         // Find all templates in the application
-        $templates = $this->findTemplates($modules, $output);
+        $dirs      = $this->getTemplateDirs($kernel);
+        $templates = $this->findTemplates($dirs, $output);
 
         // Set up Assetic and Twig for compilation
         $af   = $container->get('templating.assetic.factory');
         $twig = $container->get('templating.engine.twig')->getEnvironment();
         $twig->setLoader(new \Twig_Loader_Filesystem('/'));
-        $twig->addExtension(new $container['templating.assetic.twig_extension.class']($af));
 
-        $am = new LazyAssetManager($af);
-        $am->setLoader('twig', new TwigFormulaLoader($twig));
-
-        foreach ($templates as $template) {
-            $resource = new TwigResource($twig->getLoader(), $template);
-            $am->addResource($resource, 'twig');
-        }
+        $am = $this->prepareAssetManager($af, $twig, $templates);
 
         $output->writeln(sprintf(
             '<comment>Compiling %s asset(s) from %s templates...</comment>',
@@ -87,34 +80,72 @@ class AssetsCompileCommand extends Command
             $output->writeln(sprintf('<info>Output written to: %s</info>', $publicDir));
         } catch (\Exception $e) {
             $output->writeln(sprintf('<error>Failed to write output to: %s</error>', $publicDir));
+            $output->writeln(sprintf('<error>Error message was: %s', $e->getMessage()));
         }
+    }
+
+    /**
+     * Prepare the LazyAssetManager
+     *
+     * @param AssetFactory      $af
+     * @param \Twig_Environment $twig
+     * @param array             $templates
+     *
+     * @return LazyAssetManager
+     */
+    private function prepareAssetManager(AssetFactory $af, \Twig_Environment $twig, array $templates)
+    {
+        $am = new LazyAssetManager($af);
+        $am->setLoader('twig', new TwigFormulaLoader($twig));
+
+        foreach ($templates as $template) {
+            $resource = new TwigResource($twig->getLoader(), $template);
+            $am->addResource($resource, 'twig');
+        }
+
+        return $am;
+    }
+
+    /**
+     * Get all standard template directories.
+     *
+     * @param TridentKernel $kernel
+     *
+     * @return array
+     */
+    private function getTemplateDirs($kernel)
+    {
+        $dirs = [];
+        $dirs['core'] = $kernel->getRootDir().'/views';
+
+        foreach ($kernel->getModules() as $module) {
+            $dirs[$module->getName()] = $module->getRootDir().'/module/views';
+        }
+
+        return $dirs;
     }
 
     /**
      * Find templates. Outputs status.
      *
-     * @param array           $modules
+     * @param array           $dirs
      * @param OutputInterface $output
      *
      * @return array
      */
-    protected function findTemplates(array $modules, OutputInterface $output)
+    protected function findTemplates(array $dirs, OutputInterface $output)
     {
         $filesystem = new FileSystem();
 
         $templates = [];
 
-        foreach ($modules as $module) {
-            $output->write(sprintf(
-                'Finding templates in "%s" module', $module->getName()
-            ));
-
-            $viewsDir = $module->getRootDir().'/module/views';
+        foreach ($dirs as $name => $dir) {
+            $output->write(sprintf('Finding templates in "%s"', $name));
 
             try {
-                if ($filesystem->exists($viewsDir)) {
+                if ($filesystem->exists($dir)) {
                     $finder = new Finder();
-                    $finder->files()->in($viewsDir)->name('*.html.twig');
+                    $finder->files()->in($dir)->name('*.html.twig');
 
                     foreach ($finder as $file) {
                         $templates[] = $file->getPathName();

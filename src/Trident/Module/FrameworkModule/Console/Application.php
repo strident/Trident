@@ -16,7 +16,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Trident\Component\HttpKernel\Module\ConsoleModuleInterface;
-use Trident\Component\HttpKernel\AbstractKernel;
 
 /**
  * Trident Console Application
@@ -30,9 +29,9 @@ class Application extends BaseApplication
     /**
      * Constructor.
      *
-     * @param AbstractKernel $kernel
+     * @param \TridentKernel $kernel
      */
-    public function __construct(AbstractKernel $kernel)
+    public function __construct(\TridentKernel $kernel)
     {
         $this->kernel = $kernel;
 
@@ -82,7 +81,7 @@ class Application extends BaseApplication
     /**
      * Get the kernel.
      *
-     * @return AbstractKernel
+     * @return \TridentKernel
      */
     public function getKernel()
     {

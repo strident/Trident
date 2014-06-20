@@ -52,40 +52,85 @@ class AssetsInstallCommand extends Command
         $kernel  = $this->getApplication()->getKernel();
         $modules = $kernel->getModules();
 
-        $output->writeln(sprintf(
-            'Installing assets for <info>%s</info> modules.',
-            count($modules)
-        ));
-
+        $output->writeln(sprintf('Installing assets for <info>%s</info> modules.', count($modules)));
         $output->writeln('');
+
+        // Flush existing assets
+        if ( ! $this->flushAssets($kernel, $output)) {
+            // Halt if assets couldn't be flushed
+            return;
+        }
+
+        // Install core application assets (if any)
+        $this->installAssets($kernel, 'core', $kernel->getRootDir().'/public', $output);
+
+        // Install module assets (if any)
+        foreach ($modules as $module) {
+            $from = $module->getRootDir().'/module/public';
+
+            $this->installAssets($kernel, $module->getName(), $from, $output);
+        }
+    }
+
+    /**
+     * Install assets from on directory to another.
+     *
+     * @param \TridentKernel  $kernel
+     * @param string          $name
+     * @param string          $from
+     * @param OutputInterface $output
+     */
+    private function installAssets(\TridentKernel $kernel, $name, $from, OutputInterface $output)
+    {
+        $output->write(sprintf('Installing assets for "%s"', $name));
 
         $filesystem = new FileSystem();
 
-        foreach ($modules as $module) {
-            $output->write(sprintf(
-                'Installing assets for "%s"', $module->getName()
-            ));
+        if ( ! $filesystem->exists($from)) {
+            // If there were no assets to install
+            $output->writeln('... <comment>N/A</comment>');
+            return;
+        }
 
-            $from = $module->getRootDir().'/module/public';
-            $to   = $kernel->getRootDir().'/../public/modules/'.strtolower($module->getName());
+        try {
+            $filesystem->symlink($from, $kernel->getAssetDir().'/'.strtolower($name));
 
-            if ( ! $filesystem->exists($from)) {
-                // If there were no assets to install
-                $output->writeln('... <comment>N/A</comment>');
+            // If assets were found, and successfully installed:
+            $output->writeln('... <info>Done</info>');
+        } catch(IOExceptionInterface $e) {
+            // If there were any problems installing assets:
+            $output->writeln('... <error>Error</error>');
+        }
+    }
 
-                // Skip to next module
-                continue;
+    /**
+     * Flush all existing assets
+     *
+     * @param TridentKernel   $kernel
+     * @param OutputInterface $output
+     *
+     * @return boolean
+     */
+    private function flushAssets(\TridentKernel $kernel, OutputInterface $output)
+    {
+        $filesystem = new FileSystem();
+
+        $output->write('Clearing existing assets');
+
+        try {
+            if ($filesystem->exists($kernel->getAssetDir())) {
+                $filesystem->remove($kernel->getAssetDir());
             }
 
-            try {
-                $filesystem->symlink($from, $to);
+            $output->writeln('... <info>Done</info>');
+            $output->writeln('');
 
-                // If assets were found, and successfully installed:
-                $output->writeln('... <info>Done</info>');
-            } catch(IOExceptionInterface $e) {
-                // If there were any problems installing assets:
-                $output->writeln('... <error>Error</error>');
-            }
+            return true;
+        } catch (\Exception $e) {
+            $output->writeln('... <error>Error</error>');
+            $output->writeln('');
+
+            return false;
         }
     }
 }
