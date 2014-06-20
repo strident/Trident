@@ -39,9 +39,6 @@ class AssetsCompileCommand extends Command
         // Meta
         $this->setName('assets:compile');
         $this->setDescription('Compile assets installed that are used in Twig views.');
-
-        // Options
-        $this->addOption('env', 'e', InputOption::VALUE_OPTIONAL, 'Environment to compile assets for.', 'dev');
     }
 
     /**
@@ -52,17 +49,18 @@ class AssetsCompileCommand extends Command
         $kernel    = $this->getApplication()->getKernel();
         $container = $kernel->getContainer();
         $modules   = $kernel->getModules();
+        $publicDir = $kernel->getRootDir().'/../public';
 
-        $output->writeln(sprintf(
-            'Compiling assets for <info>%s</info> modules for <comment>"%s"</comment> environment.',
-            count($modules),
-            $input->getOption('env')
-        ));
-
+        // Print header
+        $output->writeln(sprintf('Compiling assets for <info>%s</info> modules.', count($modules)));
+        $output->writeln(sprintf('The current environment is <comment>"%s"</comment>.', $container['kernel.environment']));
+        $output->writeln(sprintf('Debug mode is <comment>%s</comment>.', $container['kernel.debug'] ? 'on' : 'off'));
         $output->writeln('');
 
+        // Find all templates in the application
         $templates = $this->findTemplates($modules, $output);
 
+        // Set up Assetic and Twig for compilation
         $af   = $container->get('templating.assetic.factory');
         $twig = $container->get('templating.engine.twig')->getEnvironment();
         $twig->setLoader(new \Twig_Loader_Filesystem('/'));
@@ -76,9 +74,11 @@ class AssetsCompileCommand extends Command
             $am->addResource($resource, 'twig');
         }
 
-        $publicDir = $kernel->getRootDir().'/../public';
-
-        $output->writeln('');
+        $output->writeln(sprintf(
+            '<comment>Compiling %s asset(s) from %s templates...</comment>',
+            count($am->getNames()),
+            count($templates)
+        ));
 
         try {
             $writer = new AssetWriter($publicDir);
@@ -128,6 +128,8 @@ class AssetsCompileCommand extends Command
                 $output->writeln('... <error>Error</error>');
             }
         }
+
+        $output->writeln('');
 
         return $templates;
     }

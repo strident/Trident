@@ -13,6 +13,7 @@ namespace Trident\Module\FrameworkModule\Console;
 
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Trident\Component\HttpKernel\Module\ConsoleModuleInterface;
 use Trident\Component\HttpKernel\AbstractKernel;
@@ -36,6 +37,9 @@ class Application extends BaseApplication
         $this->kernel = $kernel;
 
         parent::__construct('Trident', $kernel::VERSION);
+
+        $this->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.'));
+        $this->getDefinition()->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
     }
 
     /**
