@@ -10,6 +10,7 @@ return function($container) {
     $container['templating.engine.twig.class']            = 'Trident\\Component\\Templating\\Engine\\TwigEngine';
     $container['templating.engine_factory.class']         = 'Trident\\Component\\Templating\\Engine\\EngineFactory';
     $container['templating.file_loader.twig.class']       = 'Trident\\Component\\Templating\\Loader\\TwigFileLoader';
+    $container['templating.global_variables.class']       = 'Trident\\Component\\Templating\\GlobalVariables';
     $container['templating.name_resolver.class']          = 'Trident\\Component\\Templating\\TemplateNameResolver';
     $container['templating.class']                        = 'Trident\\Component\\Templating\\Templating';
 
@@ -61,6 +62,10 @@ return function($container) {
         return new $c['templating.file_loader.twig.class']($resolver);
     });
 
+    $container->set('templating.global_variables', function($c) {
+        return new $c['templating.global_variables.class']($c);
+    });
+
     $container->set('templating.name_resolver', function($c) {
         return new $c['templating.name_resolver.class']($c->get('kernel'));
     });
@@ -77,6 +82,9 @@ return function($container) {
     $container->extend('templating.engine.twig', function($twig, $c) {
         $environment = $twig->getEnvironment();
         $environment->addExtension(new $c['templating.assetic.twig_extension.class']($c->get('templating.assetic.factory')));
+
+        // Add global variables
+        $environment->addGlobal('app', $c->get('templating.global_variables'));
 
         return $twig;
     });

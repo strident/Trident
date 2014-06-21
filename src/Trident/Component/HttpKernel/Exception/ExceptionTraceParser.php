@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Trident\Module\FrameworkModule\Exception;
+namespace Trident\Component\HttpKernel\Exception;
 
 /**
  * Exception Trace Parser
@@ -120,6 +120,6 @@ class ExceptionTraceParser
             return 'true';
         }
 
-        return (string) "'$var'";
+        return (string) gettype($var);
     }
 }

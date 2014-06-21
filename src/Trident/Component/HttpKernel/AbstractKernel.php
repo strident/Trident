@@ -191,7 +191,7 @@ abstract class AbstractKernel implements HttpKernelInterface
                 // If no route is found, throw handle a 404 exception
                 throw new NotFoundHttpException(sprintf(
                     'No route found for path "%s".',
-                    $request->generateRelative()
+                    $request->getPath()
                 ));
             }
         } else {
@@ -564,6 +564,7 @@ abstract class AbstractKernel implements HttpKernelInterface
             'kernel.logs_dir'    => $this->getLogDir(),
             'kernel.name'        => $this->getName(),
             'kernel.root_dir'    => $this->getRootDir(),
+            'kernel.version'     => self::VERSION
         ];
     }
 }

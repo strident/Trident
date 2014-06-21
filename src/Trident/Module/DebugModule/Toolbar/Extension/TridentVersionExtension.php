@@ -12,13 +12,6 @@ use Trident\Component\HttpKernel\AbstractKernel;
  */
 class TridentVersionExtension extends AbstractExtension
 {
-    public function __construct()
-    {
-        $this->data = [
-            'version' => AbstractKernel::VERSION
-        ];
-    }
-
     /**
      * {@inheritDoc}
      */

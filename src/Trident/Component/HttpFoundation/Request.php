@@ -25,7 +25,7 @@ class Request extends BaseRequest
      *
      * @return string
      */
-    public function generateRelative()
+    public function getPath()
     {
         $rawQuery = $this->query->all();
 

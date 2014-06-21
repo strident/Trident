@@ -24,34 +24,20 @@
                     <span class="line"><span class="comment">// ...</span></span>
                     <span class="line"></span>
                     <span class="line">{{ tab }}<span class="comment">// Upon failure, throw an exception</span></span>
-                    <span class="line">{{ tab }}<span class="keyword">throw new</span> <abbr title="{{ data.class.long }}" class="method">{{ data.class.short }}</abbr>(<span class="function">sprintf</span>(
-                    <span class="line">{{ tab }}{{ tab }}<span class="string">'{{ data.message }}'</span></span>
-                    <span class="line">{{ tab }}), <span class="number">{{ data.statusCode }}</span>);</span>
+                    <span class="line">{{ tab }}<span class="keyword">throw new</span> <abbr title="{{ exception.fullType }}" class="method">{{ exception.type }}</abbr>(<span class="function">sprintf</span>(
+                    <span class="line">{{ tab }}{{ tab }}<span class="string">'{{ exception.message }}'</span></span>
+                    <span class="line">{{ tab }}), <span class="number">{{ exception.statusCode }}</span>);</span>
                     <span class="line"></span>
                 </div>
             </div>
         </div>
-
-
-{#         <div class="pre-esque">
-            <div class="container pre-container">
-                <div class="pre-message">
-                    <span class="line"><span class="comment"># {$this->request->getMethod()} {$this->request->generateRelative()}</span></span>
-                    <span class="line"><span class="comment">// ...</span></span>
-                    <span class="line"><span class="keyword">public function</span> <span class="function">onException</span>(<span class="method">FilterExceptionEvent</span> $event)</span>
-                    <span class="line">{</span>
-                    <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;$event<span class="keyword">-></span><span class="method">setResponse</span>(<span class="keyword">new</span> Response(</span>
-                    <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'{$this->exception->getMessage()}'</span>, <span class="number">{$statusCode}</span>
-                    <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;));</span>
-                    <span class="line">}</span>
-                    <span class="line"></span>
-                </div>
-            </div>
-        </div> #}
+        <div class="container">
+            <p class="tre-mono tre-syntax-comment">&gt; {{ app.request.method }} {{ app.request.path }}</p>
+        </div>
         <div class="container">
             <p>Call stack</p>
             <div class="tre-trace tre-mono">
-                {% for item in data.trace %}
+                {% for item in exception.normalizedTrace %}
                     <div class="tre-trace-row">
                         <span>{{ item.invocation }}</span><br />
                         <span class="tre-syntax-comment">{{ item.origin }}</span>
@@ -60,7 +46,7 @@
             </div>
         </div>
         <footer class="container">
-            <p class="copyright">&copy; 2014 <a target="_blank" href="http://strident.io/">Strident</a> - Trident v{{ version }}</p>
+            <p class="copyright">&copy; 2014 <a target="_blank" href="http://strident.io/">Strident</a> - Trident v{{ app.version }}</p>
         </footer>
     </body>
 </html>
