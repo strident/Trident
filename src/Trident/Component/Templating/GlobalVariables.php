@@ -45,6 +45,16 @@ class GlobalVariables
     }
 
     /**
+     * Get application debug mode.
+     *
+     * @return boolean
+     */
+    public function getDebug()
+    {
+        return $this->container['kernel.debug'];
+    }
+
+    /**
      * Get current application version.
      *
      * @return string
