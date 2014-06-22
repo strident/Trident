@@ -54,6 +54,11 @@ class GlobalVariables
         return $this->container['kernel.debug'];
     }
 
+    public function getUser()
+    {
+        return $this->container->get('security')->getToken()->getUser();
+    }
+
     /**
      * Get current application version.
      *
