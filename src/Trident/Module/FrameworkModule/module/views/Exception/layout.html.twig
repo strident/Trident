@@ -21,7 +21,7 @@
         <div class="pre-esque">
             <div class="container pre-container">
                 <div class="pre-message">
-                    <span class="line"><span class="comment">// ...</span></span>
+                    <span class="line"><span class="comment"># {{ app.request.method }} {{ app.request.path }}</span></span>
                     <span class="line"></span>
                     <span class="line">{{ tab }}<span class="comment">// Upon failure, throw an exception</span></span>
                     <span class="line">{{ tab }}<span class="keyword">throw new</span> <abbr title="{{ exception.fullType }}" class="method">{{ exception.type }}</abbr>(<span class="function">sprintf</span>(
@@ -30,9 +30,6 @@
                     <span class="line"></span>
                 </div>
             </div>
-        </div>
-        <div class="container">
-            <h3 class="tre-mono tre-syntax-comment">&gt; {{ app.request.method }} {{ app.request.path }}</h3>
         </div>
         {% if app.debug %}
             <div class="container">

@@ -18,6 +18,7 @@
         "doctrine/orm": "2.4.2",
         "kriswallsmith/assetic": "1.1.*",
         "psr/log": "~1.0",
+        "strident/aegis": "dev-master",
         "strident/phimple": "2.0.*",
         "symfony/console": "2.5.*",
         "symfony/event-dispatcher": "2.5.*",
