@@ -55,6 +55,11 @@ class GlobalVariables
         return $this->container['kernel.debug'];
     }
 
+    public function getEnvironment()
+    {
+        return $this->container['kernel.environment'];
+    }
+
     /**
      * Get the currently authenticated user.
      *

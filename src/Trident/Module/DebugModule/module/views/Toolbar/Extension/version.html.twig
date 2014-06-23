@@ -10,4 +10,12 @@
         <strong>Trident</strong>
         <span>v{{ app.version }}</span>
     </div>
+    <div class="trt-panel-item">
+        <strong>Environment</strong>
+        <span class="trt-label">{{ app.environment }}</span>
+    </div>
+    <div class="trt-panel-item">
+        <strong>Is debug?</strong>
+        <span>{{ app.debug ? 'Yes' : 'No' }}</span>
+    </div>
 {% endblock %}
