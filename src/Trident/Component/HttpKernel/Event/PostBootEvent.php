@@ -11,15 +11,11 @@
 
 namespace Trident\Component\HttpKernel\Event;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Trident\Component\HttpKernel\HttpKernelInterface;
-
 /**
- * Post-response Event
+ * Post-boot Event
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class PostResponseEvent extends KernelEvent
+class PostBootEvent extends KernelEvent
 {
 }

@@ -18,6 +18,7 @@ namespace Trident\Component\HttpKernel;
  */
 final class KernelEvents
 {
+    const BOOT       = 'kernel.boot';
     const REQUEST    = 'kernel.request';
     const RESPONSE   = 'kernel.response';
     const EXCEPTION  = 'kernel.exception';

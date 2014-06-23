@@ -11,6 +11,7 @@
 
 namespace Trident\Component\Templating;
 
+use Aegis\User\UserInterface;
 use Phimple\ContainerInterface;
 use Trident\Component\HttpFoundation\Request;
 use Trident\Component\HttpKernel\AbstractKernel;
@@ -71,11 +72,12 @@ class GlobalVariables
             return false;
         }
 
-        if ( ! $token->isAuthenticated()) {
+        $user = $token->getUser();
+        if ( ! $user instanceof UserInterface) {
             return false;
         }
 
-        return $this->container->get('security')->getToken()->getUser();
+        return $user;
     }
 
     /**

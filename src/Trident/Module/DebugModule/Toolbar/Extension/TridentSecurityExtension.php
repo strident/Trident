@@ -11,6 +11,7 @@
 
 namespace Trident\Module\DebugModule\Toolbar\Extension;
 
+use Aegis\User\UserInterface;
 use Aegis\Aegis;
 use Trident\Component\Debug\Toolbar\Extension\AbstractExtension;
 
@@ -40,10 +41,21 @@ class TridentSecurityExtension extends AbstractExtension
      */
     public function buildData()
     {
+        $token = $this->security->getToken();
+        $user  = $token->getUser();
+
+        if ($user instanceof UserInterface) {
+            $user = $user->getUsername();
+        }
+
+        $tokenClass = is_object($token) ? get_class($token) : 'N/A';
+        $userClass  = is_object($token->getUser()) ? get_class($token->getUser()) : 'N/A';
+
         $this->data = [
-            'token'      => $this->security->getToken(),
-            'tokenClass' => get_class($this->security->getToken()),
-            'userClass'  => get_class($this->security->getToken()->getUser())
+            'token'      => $token,
+            'tokenClass' => $tokenClass,
+            'user'       => $user,
+            'userClass'  => $userClass
         ];
     }
 

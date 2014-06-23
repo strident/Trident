@@ -8,14 +8,14 @@
 
 {% block label %}
     <span>
-        <span class="trt-label {{ labelClass }}">{{ data.token.user.username }}</span>
+        <span class="trt-label {{ labelClass }}">{{ data.user }}</span>
     </span>
 {% endblock %}
 
 {% block panel %}
     <div class="trt-panel-item">
         <strong>Identified as</strong>
-        <span>{{ data.token.user.username }}</span>
+        <span>{{ data.user }}</span>
     </div>
     <div class="trt-panel-item">
         <strong>Is authenticated?</strong>

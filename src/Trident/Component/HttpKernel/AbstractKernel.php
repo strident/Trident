@@ -21,6 +21,7 @@ use Trident\Component\HttpKernel\Event\FilterControllerEvent;
 use Trident\Component\HttpKernel\Event\FilterExceptionEvent;
 use Trident\Component\HttpKernel\Event\FilterResponseEvent;
 use Trident\Component\HttpKernel\Event\InterceptResponseEvent;
+use Trident\Component\HttpKernel\Event\PostBootEvent;
 use Trident\Component\HttpKernel\Event\PostResponseEvent;
 use Trident\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Trident\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -70,12 +71,31 @@ abstract class AbstractKernel implements HttpKernelInterface
     /**
      * Transform a request into a response.
      *
-     * @param  Request $request
-     * @param  string  $type
+     * @param Request $request
+     * @param string  $type
      *
      * @return Response
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST)
+    {
+        try {
+            $response = $this->handleRequest($request, $type);
+        } catch (\Exception $e) {
+            $response = $this->handleException($e, $request, $type);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Transform a request into a response.
+     *
+     * @param Request $request
+     * @param string  $type
+     *
+     * @return Response
+     */
+    protected function handleRequest(Request $request, $type)
     {
         $this->request = $request;
 
@@ -94,12 +114,7 @@ abstract class AbstractKernel implements HttpKernelInterface
         }
 
         // Match the route to a controller
-        try {
-            $matched = $this->matchRoute($request, $type);
-        } catch (NotFoundHttpException $e) {
-            return $this->handleException($e, $request, $type);
-        }
-
+        $matched  = $this->matchRoute($request, $type);
         $resolver = $this->container->get('controller_resolver');
 
         $controller = $resolver->getController($request, $matched);
@@ -110,11 +125,8 @@ abstract class AbstractKernel implements HttpKernelInterface
         $event->setArguments($arguments);
         $this->getDispatcher()->dispatch(KernelEvents::CONTROLLER, $event);
 
-        try {
-            $response = call_user_func_array($controller, $arguments);
-        } catch (\Exception $e) {
-            return $this->handleException($e, $request, $type);
-        }
+        // Attempt to get a response from the controller
+        $response = call_user_func_array($controller, $arguments);
 
         if ( ! $response instanceof Response) {
             $message = sprintf('The controller must return a valid Response (%s given).', $this->varToString($response));
@@ -244,6 +256,9 @@ abstract class AbstractKernel implements HttpKernelInterface
         foreach ($this->modules as $module) {
             $module->boot($this->getContainer());
         }
+
+        $event = new PostBootEvent($this, $this->request, self::MASTER_REQUEST);
+        $this->getDispatcher()->dispatch(KernelEvents::BOOT, $event);
 
         $this->booted = true;
     }
@@ -436,8 +451,11 @@ abstract class AbstractKernel implements HttpKernelInterface
      */
     protected function initialiseSession()
     {
-        $session = new Session();
-        $session->start();
+        $session = $this->session ?: new Session();
+
+        if ( ! $session->isStarted()) {
+            $session->start();
+        }
 
         return $this->session = $session;
     }
