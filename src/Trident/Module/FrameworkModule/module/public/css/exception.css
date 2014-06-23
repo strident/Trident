@@ -78,18 +78,24 @@ abbr {
 .pre-message {
     font: 16px/24px Inconsolata, monospace;
     position: relative;
-    margin-left: -75px;
+    margin-left: -95px;
 }
 
 .pre-message .line {
     counter-increment: linenumber;
     display: block;
+    padding-left: 110px;
+    position: relative;
 }
 
 .pre-message .line:before {
     color: #65737e;
     content: counter(linenumber);
-    margin-right: 80px;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    text-align: right;
+    width: 30px;
 }
 
 .pre-message .comment {

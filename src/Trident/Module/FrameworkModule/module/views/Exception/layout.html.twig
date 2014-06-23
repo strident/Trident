@@ -22,12 +22,12 @@
             <div class="container pre-container">
                 <div class="pre-message">
                     <span class="line"><span class="comment"># {{ app.request.method }} {{ app.request.path }}</span></span>
-                    <span class="line"></span>
+                    <span class="line">&nbsp;</span>
                     <span class="line">{{ tab }}<span class="comment">// Upon failure, throw an exception</span></span>
-                    <span class="line">{{ tab }}<span class="keyword">throw new</span> <abbr title="{{ exception.fullType }}" class="method">{{ exception.type }}</abbr>(<span class="function">sprintf</span>(
+                    <span class="line">{{ tab }}<span class="keyword">throw new</span> <abbr title="{{ exception.fullType }}" class="method">{{ exception.type }}</abbr>(<span class="function">sprintf</span>(</span>
                     <span class="line">{{ tab }}{{ tab }}<span class="string">'{{ exception.message }}'</span></span>
                     <span class="line">{{ tab }}), <span class="number">{{ exception.statusCode }}</span>);</span>
-                    <span class="line"></span>
+                    <span class="line">&nbsp;</span>
                 </div>
             </div>
         </div>

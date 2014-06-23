@@ -54,8 +54,27 @@ class GlobalVariables
         return $this->container['kernel.debug'];
     }
 
+    /**
+     * Get the currently authenticated user.
+     *
+     * @return mixed
+     */
     public function getUser()
     {
+        if ( ! $this->container->has('security')) {
+            return false;
+        }
+
+        $security = $this->container->get('security');
+
+        if ( ! $token = $security->getToken()) {
+            return false;
+        }
+
+        if ( ! $token->isAuthenticated()) {
+            return false;
+        }
+
         return $this->container->get('security')->getToken()->getUser();
     }
 

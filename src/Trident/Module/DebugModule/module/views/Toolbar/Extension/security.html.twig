@@ -1,0 +1,32 @@
+{% extends 'TridentDebugModule:Toolbar:toolbar-item.html.twig' %}
+
+{% if data.token.isAuthenticated %}
+    {% set labelClass = 'trt-label-green' %}
+{% else %}
+    {% set labelClass = 'trt-label-red' %}
+{% endif %}
+
+{% block label %}
+    <span>
+        <span class="trt-label {{ labelClass }}">{{ data.token.user.username }}</span>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <div class="trt-panel-item">
+        <strong>Identified as</strong>
+        <span>{{ data.token.user.username }}</span>
+    </div>
+    <div class="trt-panel-item">
+        <strong>Is authenticated?</strong>
+        <span>{{ data.token.isAuthenticated ? 'Yes' : 'No' }}</span>
+    </div>
+    <div class="trt-panel-item">
+        <strong>Token class</strong>
+        <span>{{ data.tokenClass }}</span>
+    </div>
+    <div class="trt-panel-item">
+        <strong>User class</strong>
+        <span>{{ data.userClass }}</span>
+    </div>
+{% endblock %}
