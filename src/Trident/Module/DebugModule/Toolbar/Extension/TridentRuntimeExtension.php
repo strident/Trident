@@ -30,13 +30,26 @@ class TridentRuntimeExtension extends AbstractExtension
      */
     public function __construct(AbstractKernel $kernel)
     {
-        $runtime = (microtime(true) - $kernel->getStartTime()) * 1000;
+        $this->kernel = $kernel;
+    }
+
+    /**
+     * Build the extension data.
+     *
+     * @return array
+     */
+    public function buildData()
+    {
+        $runtime = (microtime(true) - $this->kernel->getStartTime()) * 1000;
 
         $this->data = [
             'runtime' => $runtime
         ];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getTemplateName()
     {
         return 'TridentDebugModule:Toolbar/Extension:runtime.html.twig';

@@ -20,7 +20,12 @@ use Trident\Component\Debug\Toolbar\Extension\AbstractExtension;
  */
 class TridentMemoryUsageExtension extends AbstractExtension
 {
-    public function __construct()
+    /**
+     * Build extension data.
+     *
+     * @return array
+     */
+    public function buildData()
     {
         $this->data = [
             'memory'      => memory_get_peak_usage(true),

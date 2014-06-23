@@ -8,13 +8,15 @@ return function($container) {
     $container['debug.listener.toolbar_controller.class']      = 'Trident\\Module\\DebugModule\\Listener\\ToolbarControllerListener';
     $container['debug.listener.toolbar_doctrine_query.class']  = 'Trident\\Module\\DebugModule\\Listener\\ToolbarDoctrineQueryListener';
     $container['debug.listener.toolbar_injection.class']       = 'Trident\\Module\\DebugModule\\Listener\\ToolbarInjectionResponseListener';
+    $container['debug.listener.toolbar_memory_usage.class']    = 'Trident\\Module\\DebugModule\\Listener\\ToolbarMemoryUsageListener';
+    $container['debug.listener.toolbar_runtime.class']         = 'Trident\\Module\\DebugModule\\Listener\\ToolbarRuntimeListener';
     $container['debug.listener.toolbar_security.class']        = 'Trident\\Module\\DebugModule\\Listener\\ToolbarSecurityListener';
     $container['debug.toolbar.extension.caching.class']        = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentCachingExtension';
     $container['debug.toolbar.extension.controller.class']     = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentControllerExtension';
     $container['debug.toolbar.extension.doctrine_query.class'] = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentDoctrineQueryExtension';
     $container['debug.toolbar.extension.memory_usage.class']   = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentMemoryUsageExtension';
     $container['debug.toolbar.extension.runtime.class']        = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentRuntimeExtension';
-    $container['debug.toolbar.extension.security.class']        = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentSecurityExtension';
+    $container['debug.toolbar.extension.security.class']       = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentSecurityExtension';
     $container['debug.toolbar.extension.version.class']        = 'Trident\\Module\\DebugModule\\Toolbar\\Extension\\TridentVersionExtension';
     $container['debug.toolbar.class']                          = 'Trident\\Component\\Debug\\Toolbar\\Toolbar';
 
@@ -36,6 +38,14 @@ return function($container) {
 
     $container->set('debug.listener.toolbar_injection', function($c) {
         return new $c['debug.listener.toolbar_injection.class']($c->get('templating.engine.delegating'), $c->get('debug.toolbar'));
+    });
+
+    $container->set('debug.listener.toolbar_memory_usage', function($c) {
+        return new $c['debug.listener.toolbar_memory_usage.class']($c->get('debug.toolbar.extension.memory_usage'));
+    });
+
+    $container->set('debug.listener.toolbar_runtime', function($c) {
+        return new $c['debug.listener.toolbar_runtime.class']($c->get('debug.toolbar.extension.runtime'));
     });
 
     $container->set('debug.listener.toolbar_security', function($c) {
@@ -93,6 +103,8 @@ return function($container) {
         $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_caching'), 'onResponse']);
         $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_controller'), 'onResponse']);
         $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_doctrine_query'), 'onResponse']);
+        $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_memory_usage'), 'onResponse']);
+        $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_runtime'), 'onResponse']);
         $dispatcher->addListener(KernelEvents::RESPONSE, [$c->get('debug.listener.toolbar_security'), 'onResponse']);
 
         // Must be placed after some of the other events
