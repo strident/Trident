@@ -11,8 +11,8 @@
 
 namespace Trident\Module\DebugModule\Toolbar\Extension;
 
-use Trident\Component\Debug\Toolbar\Extension\AbstractExtension;
 use Doctrine\DBAL\Logging\DebugStack;
+use Trident\Component\Debug\Toolbar\Extension\AbstractExtension;
 
 /**
  * Doctrine Query Debug Toolbar Extension
@@ -22,6 +22,16 @@ use Doctrine\DBAL\Logging\DebugStack;
 class TridentDoctrineQueryExtension extends AbstractExtension
 {
     private $stack;
+
+    /**
+     * Constructor.
+     *
+     * @param DebugStack $stack
+     */
+    public function __construct(DebugStack $stack)
+    {
+        $this->stack = $stack;
+    }
 
     /**
      * {@inheritDoc}
@@ -47,29 +57,5 @@ class TridentDoctrineQueryExtension extends AbstractExtension
             'count' => count($this->stack->queries),
             'time'  => $time
         ];
-    }
-
-    /**
-     * Set stack.
-     *
-     * @param DebugStack $stack
-     *
-     * @return TridentDoctrineQueryExtension
-     */
-    public function setStack(DebugStack $stack)
-    {
-        $this->stack = $stack;
-
-        return $this;
-    }
-
-    /**
-     * Get stack.
-     *
-     * @return DebugStack
-     */
-    public function getStack()
-    {
-        return $this->stack;
     }
 }

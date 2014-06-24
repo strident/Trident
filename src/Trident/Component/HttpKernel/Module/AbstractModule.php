@@ -42,6 +42,7 @@ abstract class AbstractModule
 
     public function boot(Container $container)
     {
+        $this->registerServices($container);
         $this->registerRoutes($container->get('route_collection'));
     }
 
@@ -72,5 +73,15 @@ abstract class AbstractModule
         $pos = strrpos($name, '\\');
 
         return $this->name = false === $pos ? $name : substr($name, $pos + 1);
+    }
+
+    /**
+     * Is this module a core module? Must be overridden.
+     *
+     * @return boolean
+     */
+    public function isCoreModule()
+    {
+        return false;
     }
 }

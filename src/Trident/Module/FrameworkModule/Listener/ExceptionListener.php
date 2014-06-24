@@ -57,7 +57,6 @@ class ExceptionListener
         $exception = $event->getException();
         $request   = $event->getRequest();
 
-
         // This would be where we'd log, make another method that checks if logger is there and logs.
 
         $request = $this->duplicateRequest($exception, $request);
@@ -65,7 +64,7 @@ class ExceptionListener
         try {
             $response = $event->getKernel()->handle($request, HttpKernelInterface::SUB_REQUEST);
         } catch (\Exception $e) {
-            // Log exception being thrown when trying to hanble an exception.
+            // Log exception being thrown when trying to handle an exception.
 
             // Set handling to false otherwise it wont be able to handle further more
             $handling = false;

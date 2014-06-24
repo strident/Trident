@@ -44,6 +44,7 @@ abstract class AbstractKernel implements HttpKernelInterface
     protected $name;
     protected $request;
     protected $rootDir;
+    protected $safeMode = false;
     protected $session;
     protected $startTime;
 
@@ -248,19 +249,21 @@ abstract class AbstractKernel implements HttpKernelInterface
      */
     public function boot()
     {
-        $this->initialiseConfiguration();
-        $this->initialiseModules();
-        $this->initialiseSession();
-        $this->initialiseContainer();
+        try {
+            $this->initialiseConfiguration();
+            $this->initialiseSession();
+            $this->initialiseContainer();
+            $this->initialiseModules();
+        } catch (\Exception $e) {
+            $this->setSafeMode(true);
 
-        foreach ($this->modules as $module) {
-            $module->boot($this->getContainer());
+            throw $e;
         }
+
+        $this->booted = true;
 
         $event = new PostBootEvent($this, $this->request, self::MASTER_REQUEST);
         $this->getDispatcher()->dispatch(KernelEvents::BOOT, $event);
-
-        $this->booted = true;
     }
 
     /**
@@ -289,6 +292,30 @@ abstract class AbstractKernel implements HttpKernelInterface
     public function isDebugMode()
     {
         return (bool) $this->debug;
+    }
+
+    /**
+     * Is kernel in safe mode?
+     *
+     * @return boolean
+     */
+    public function isSafeMode()
+    {
+        return (bool) $this->safeMode;
+    }
+
+    /**
+     * Set safe mode.
+     *
+     * @param boolean $safeMode
+     *
+     * @return AbstractKernel
+     */
+    protected function setSafeMode($safeMode)
+    {
+        $this->safeMode = (bool) $safeMode;
+
+        return $this;
     }
 
     /**
@@ -408,13 +435,19 @@ abstract class AbstractKernel implements HttpKernelInterface
     {
         $this->modules = array();
 
-        // @todo: environments!
         foreach ($this->registerModules($this->environment) as $module) {
+            if ($this->isSafeMode() && ! $module->isCoreModule()) {
+                continue;
+            }
+
             $name = $module->getName();
 
             if (isset($this->modules[$name])) {
                 throw new \LogicException(sprintf('Trying to register two modules with the same name "%s"', $name));
             }
+
+            // Attempt to boot the module
+            $module->boot($this->getContainer());
 
             $this->modules[$module->getName()] = $module;
         }
@@ -510,10 +543,6 @@ abstract class AbstractKernel implements HttpKernelInterface
         $container->set('configuration', $this->configuration);
         $container->set('request', $this->request);
         $container->set('session', $this->session);
-
-        foreach ($this->modules as $module) {
-            $module->registerServices($container);
-        }
     }
 
     /**

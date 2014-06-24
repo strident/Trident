@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Trident\Module\DebugModule\Listener;
+namespace Trident\Module\DebugModule\Toolbar\Event;
 
 use Trident\Component\Debug\Toolbar\Toolbar;
 use Trident\Component\HttpKernel\Event\FilterResponseEvent;
@@ -46,6 +46,10 @@ class ToolbarInjectionResponseListener
         $kernel   = $event->getKernel();
         $response = $event->getResponse();
         $content  = $response->getContent();
+
+        foreach ($this->toolbar->getExtensions() as $extension) {
+            $extension->buildData();
+        }
 
         if (false !== strpos($content, '</body>')) {
             $debug = $this->engine->render('TridentDebugModule:Toolbar:toolbar.html.twig', [

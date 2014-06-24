@@ -11,14 +11,19 @@
 
 namespace Trident\Module\DebugModule\Toolbar\Extension;
 
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trident\Component\Debug\Toolbar\Extension\AbstractExtension;
+use Trident\Component\HttpKernel\Event\FilterControllerEvent;
+use Trident\Component\HttpKernel\Event\FilterResponseEvent;
+use Trident\Component\HttpKernel\HttpKernelInterface;
+use Trident\Component\HttpKernel\KernelEvents;
 
 /**
  * Controller Debug Toolbar Extension
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class TridentControllerExtension extends AbstractExtension
+class TridentControllerExtension extends AbstractExtension implements EventSubscriberInterface
 {
     private $action;
     private $controller;
@@ -116,5 +121,57 @@ class TridentControllerExtension extends AbstractExtension
     public function getStatusCode()
     {
         return $this->statusCode;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::CONTROLLER => ['collectControllerData', 0],
+            KernelEvents::RESPONSE   => ['collectResponseData', 0]
+        ];
+    }
+
+    /**
+     * Collect data from controller.
+     *
+     * @param FilterResponseEvent $event
+     */
+    public function collectControllerData(FilterControllerEvent $event)
+    {
+        if (HttpKernelInterface::SUB_REQUEST === $event->getRequestType()) {
+            return;
+        }
+
+        $controller = $this->getClassName($event->getController()[0]);
+        $action     = $event->getController()[1];
+
+        $this->setController($controller);
+        $this->setAction($action);
+    }
+
+    /**
+     * Collect data from response.
+     *
+     * @param FilterResponseEvent $event
+     */
+    public function collectResponseData(FilterResponseEvent $event)
+    {
+        $this->setStatusCode($event->getResponse()->getStatusCode());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getClassName($object)
+    {
+        $name = get_class($object);
+        $pos = strrpos($name, '\\');
+
+        return false === $pos
+            ? $name
+            : substr($name, $pos + 1);
     }
 }

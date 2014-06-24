@@ -57,4 +57,12 @@ class TridentFrameworkModule extends AbstractModule implements ConsoleModuleInte
         call_user_func($cache, $container);
         call_user_func($error, $container);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isCoreModule()
+    {
+        return true;
+    }
 }

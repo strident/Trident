@@ -43,4 +43,12 @@ class TridentTemplatingModule extends AbstractModule
 
         // @todo: Throw some exception if registered is false
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isCoreModule()
+    {
+        return true;
+    }
 }

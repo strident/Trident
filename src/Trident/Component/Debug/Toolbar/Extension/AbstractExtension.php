@@ -13,6 +13,12 @@ namespace Trident\Component\Debug\Toolbar\Extension;
 
 use Trident\Component\Debug\Toolbar\Extension\ExtensionInterface;
 use Trident\Component\Debug\Toolbar\Segment;
+use Trident\Component\HttpKernel\Event\FilterControllerEvent;
+use Trident\Component\HttpKernel\Event\FilterExceptionEvent;
+use Trident\Component\HttpKernel\Event\FilterResponseEvent;
+use Trident\Component\HttpKernel\Event\InterceptResponseEvent;
+use Trident\Component\HttpKernel\Event\PostBootEvent;
+use Trident\Component\HttpKernel\Event\PostResponseEvent;
 
 /**
  * Abstract Debug Toolbar Extension

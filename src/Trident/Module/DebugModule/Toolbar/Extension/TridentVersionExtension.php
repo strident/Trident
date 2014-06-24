@@ -12,6 +12,10 @@ use Trident\Component\HttpKernel\AbstractKernel;
  */
 class TridentVersionExtension extends AbstractExtension
 {
+    public function buildData()
+    {
+    }
+
     /**
      * {@inheritDoc}
      */

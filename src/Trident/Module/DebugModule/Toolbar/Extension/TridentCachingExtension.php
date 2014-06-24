@@ -24,6 +24,16 @@ class TridentCachingExtension extends AbstractExtension
     private $stack;
 
     /**
+     * Constructor.
+     *
+     * @param DebugStack $stack
+     */
+    public function __construct(DebugStack $stack)
+    {
+        $this->stack = $stack;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getTemplateName()
@@ -38,33 +48,8 @@ class TridentCachingExtension extends AbstractExtension
      */
     public function buildData()
     {
-
         $this->data = [
             'hits' => count($this->stack->hits)
         ];
-    }
-
-    /**
-     * Set stack.
-     *
-     * @param DebugStack $stack
-     *
-     * @return TridentDoctrineQueryExtension
-     */
-    public function setStack(DebugStack $stack)
-    {
-        $this->stack = $stack;
-
-        return $this;
-    }
-
-    /**
-     * Get stack.
-     *
-     * @return DebugStack
-     */
-    public function getStack()
-    {
-        return $this->stack;
     }
 }
