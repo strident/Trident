@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Trident\Module\DebugModule\Toolbar\Extension;
+namespace Trident\Module\SecurityModule\Debug\Toolbar\Extension;
 
 use Aegis\User\UserInterface;
 use Aegis\Aegis;

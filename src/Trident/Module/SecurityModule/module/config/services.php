@@ -4,6 +4,7 @@ return function($container) {
     // Paremeters
     $container['security.aegis.authenticator.delegating.class'] = 'Aegis\\Authentication\\Authenticator\\DelegatingAuthenticator';
     $container['security.aegis.storage.session.class']          = 'Trident\\Bridge\\Strident\\Aegis\\Storage\\SessionStorage';
+    $container['security.debug.toolbar.extension.class']        = 'Trident\\Module\\SecurityModule\\Debug\\Toolbar\\Extension\\TridentSecurityExtension';
     $container['security.listener.request.class']               = 'Trident\\Module\\SecurityModule\\Listener\\RequestListener';
     $container['security.class']                                = 'Aegis\\Aegis';
 
@@ -17,6 +18,10 @@ return function($container) {
         $sessionKey = $c->get('configuration')->get('security.session.key', 'trident.session');
 
         return new $c['security.aegis.storage.session.class']($c->get('session'), $sessionKey);
+    });
+
+    $container->set('security.debug.toolbar.extension', function($c) {
+        return new $c['security.debug.toolbar.extension.class']($c->get('security'));
     });
 
     $container->set('security.listener.request', function($c) {
