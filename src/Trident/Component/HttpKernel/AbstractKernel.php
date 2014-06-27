@@ -265,6 +265,10 @@ abstract class AbstractKernel implements HttpKernelInterface
         } catch (\Exception $e) {
             $this->setSafeMode(true);
 
+            // Attempt to boot in safe mode to allow the application to properly
+            // handle the exception - if possible.
+            $this->boot();
+
             throw $e;
         }
 
@@ -439,6 +443,7 @@ abstract class AbstractKernel implements HttpKernelInterface
     protected function initialiseModules()
     {
         $this->modules = array();
+        $exceptions = array();
 
         foreach ($this->registerModules($this->environment) as $module) {
             if ($this->isSafeMode() && ! $module->isCoreModule()) {
@@ -451,7 +456,6 @@ abstract class AbstractKernel implements HttpKernelInterface
                 throw new \LogicException(sprintf('Trying to register two modules with the same name "%s"', $name));
             }
 
-            // Attempt to boot the module
             $module->boot($this->getContainer());
 
             $this->modules[$module->getName()] = $module;

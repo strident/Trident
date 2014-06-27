@@ -6,5 +6,5 @@ return function($container) {
         $toolbar->addExtension($c->get('doctrine.debug.toolbar.extension.query'));
 
         return $toolbar;
-    });
+    }, false);
 };

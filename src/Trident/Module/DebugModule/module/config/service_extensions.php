@@ -10,10 +10,10 @@ return function($container) {
         $toolbar->addExtension($c->get('debug.toolbar.extension.runtime'));
         $toolbar->addExtension($c->get('debug.toolbar.extension.memory_usage'));
         $toolbar->addExtension($c->get('debug.toolbar.extension.caching'));
-        $toolbar->addExtension($c->get('debug.toolbar.extension.security'));
+        // $toolbar->addExtension($c->get('debug.toolbar.extension.security'));
 
         return $toolbar;
-    });
+    }, false);
 
     $container->extend('event_dispatcher', function($dispatcher, $c) {
         // Register all extension events before toolbar injection
