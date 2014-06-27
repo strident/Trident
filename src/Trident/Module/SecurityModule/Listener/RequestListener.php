@@ -11,16 +11,16 @@
 
 namespace Trident\Module\SecurityModule\Listener;
 
-use Trident\Component\HttpKernel\Event\PostBootEvent;
+use Trident\Component\HttpKernel\Event\FilterRequestEvent;
 
 /**
- * Boot Listener
+ * Security Request Listener
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class BootListener
+class RequestListener
 {
-    public function onBoot(PostBootEvent $event)
+    public function onRequest(FilterRequestEvent $event)
     {
         $kernel    = $event->getKernel();
         $container = $kernel->getContainer();

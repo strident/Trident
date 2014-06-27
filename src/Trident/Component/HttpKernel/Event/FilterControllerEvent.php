@@ -14,7 +14,9 @@ namespace Trident\Component\HttpKernel\Event;
 use Trident\Component\HttpKernel\Event\KernelEvent;
 
 /**
+ * Filter Controller Event
  *
+ * @author Elliot Wright <elliot@elliotwright.co>
  */
 class FilterControllerEvent extends KernelEvent
 {

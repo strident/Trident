@@ -61,6 +61,16 @@ class TridentFrameworkModule extends AbstractModule implements ConsoleModuleInte
     /**
      * {@inheritDoc}
      */
+    public function registerServiceExtensions(Container $container)
+    {
+        $error = require __DIR__.'/module/config/service_extensions_error.php';
+
+        call_user_func($error, $container);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function isCoreModule()
     {
         return true;
