@@ -37,10 +37,24 @@ class TridentDoctrineModule extends AbstractModule
      */
     public function registerServices(Container $container)
     {
-        $dbal = require __DIR__.'/module/config/services_dbal.php';
-        $orm  = require __DIR__.'/module/config/services_orm.php';
+        $services = require __DIR__.'/module/config/services.php';
+        $dbal     = require __DIR__.'/module/config/services_dbal.php';
+        $orm      = require __DIR__.'/module/config/services_orm.php';
 
+        call_user_func($services, $container);
         call_user_func($dbal, $container);
+        call_user_func($orm, $container);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function registerServiceExtensions(Container $container)
+    {
+        $extensions = require __DIR__.'/module/config/service_extensions.php';
+        $orm        = require __DIR__.'/module/config/service_extensions_orm.php';
+
+        call_user_func($extensions, $container);
         call_user_func($orm, $container);
     }
 }

@@ -6,7 +6,6 @@ return function($container) {
     $container['doctrine.orm.tools_setup.class']    = 'Doctrine\\ORM\\Tools\\Setup';
     $container['doctrine.annotations.driver.class'] = 'Doctrine\\ORM\\Mapping\\Driver\\AnnotationDriver';
     $container['doctrine.annotations.reader.class'] = 'Doctrine\\Common\\Annotations\\AnnotationReader';
-    $container['doctrine.orm.sql_logger.class']     = 'Doctrine\\DBAL\\Logging\\DebugStack';
 
 
     // Services
@@ -43,27 +42,5 @@ return function($container) {
             'password' => $appConfig->get('database.default.password'),
             'dbname'   => $appConfig->get('database.default.database'),
         ], $c->get('doctrine.orm.configuration'));
-    });
-
-    $container->set('doctrine.orm.sql_logger', function($c) {
-        return new $c['doctrine.orm.sql_logger.class']();
-    });
-
-    // Extensions
-    $container->extend('doctrine.orm.configuration', function($ormConfig, $c) {
-        $appConfig = $c->get('configuration');
-
-        if (! $c['kernel.debug'] && 'memcached' === $appConfig->get('caching.default')) {
-            $ormConfig->setMetadataCacheImpl($c->get('doctrine.cache.memcached'));
-            $ormConfig->setQueryCacheImpl($c->get('doctrine.cache.memcached'));
-        }
-
-        return $ormConfig;
-    });
-
-    $container->extend('doctrine.orm.entity_manager', function($em, $c) {
-        $em->getConfiguration()->setSQLLogger($c->get('doctrine.orm.sql_logger'));
-
-        return $em;
     });
 };

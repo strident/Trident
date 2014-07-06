@@ -68,11 +68,21 @@ class GlobalVariables
     /**
      * Get application environment.
      *
-     * @return string
+     * @return mixed
      */
     public function getEnvironment()
     {
         return $this->container['kernel.environment'];
+    }
+
+    /**
+     * Get application safe mode.
+     *
+     * @return boolean
+     */
+    public function getSafeMode()
+    {
+        return $this->container->get('kernel')->isSafeMode();
     }
 
     /**

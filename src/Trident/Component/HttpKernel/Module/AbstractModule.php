@@ -40,10 +40,32 @@ abstract class AbstractModule
      */
     abstract public function registerServices(Container $continer);
 
+    /**
+     * Register module service extensions in the container
+     *
+     * @param Container $container
+     */
+    abstract public function registerServiceExtensions(Container $container);
+
+    /**
+     * Boot the module
+     *
+     * @param Container $container
+     */
     public function boot(Container $container)
     {
         $this->registerServices($container);
         $this->registerRoutes($container->get('route_collection'));
+    }
+
+    /**
+     * When all modules have booted, run through again calling this
+     *
+     * @param Container $container
+     */
+    public function postBoot(Container $container)
+    {
+        $this->registerServiceExtensions($container);
     }
 
     /**

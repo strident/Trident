@@ -41,4 +41,14 @@ class TridentSecurityModule extends AbstractModule
 
         call_user_func($services, $container);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function registerServiceExtensions(Container $container)
+    {
+        $extensions = require __DIR__.'/module/config/service_extensions.php';
+
+        call_user_func($extensions, $container);
+    }
 }

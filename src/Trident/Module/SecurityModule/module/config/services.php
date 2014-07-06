@@ -1,18 +1,17 @@
 <?php
 
-use Trident\Component\HttpKernel\KernelEvents;
-
 return function($container) {
     // Paremeters
-    $container['security.aegis.provider.delegating.class'] = 'Aegis\\Authentication\\Provider\\DelegatingAuthenticationProvider';
-    $container['security.aegis.storage.session.class']     = 'Trident\\Bridge\\Strident\\Aegis\\Storage\\SessionStorage';
-    $container['security.listener.boot.class']             = 'Trident\\Module\\SecurityModule\\Listener\\BootListener';
-    $container['security.class']                           = 'Aegis\\Aegis';
+    $container['security.aegis.authenticator.delegating.class'] = 'Aegis\\Authentication\\Authenticator\\DelegatingAuthenticator';
+    $container['security.aegis.storage.session.class']          = 'Trident\\Bridge\\Strident\\Aegis\\Storage\\SessionStorage';
+    $container['security.debug.toolbar.extension.class']        = 'Trident\\Module\\SecurityModule\\Debug\\Toolbar\\Extension\\TridentSecurityExtension';
+    $container['security.listener.request.class']               = 'Trident\\Module\\SecurityModule\\Listener\\RequestListener';
+    $container['security.class']                                = 'Aegis\\Aegis';
 
 
     // Services
-    $container->set('security.aegis.provider.delegating', function($c) {
-        return new $c['security.aegis.provider.delegating.class']();
+    $container->set('security.aegis.authenticator.delegating', function($c) {
+        return new $c['security.aegis.authenticator.delegating.class']();
     });
 
     $container->set('security.aegis.storage.session', function($c) {
@@ -21,29 +20,19 @@ return function($container) {
         return new $c['security.aegis.storage.session.class']($c->get('session'), $sessionKey);
     });
 
-    $container->set('security.listener.boot', function($c) {
-        return new $c['security.listener.boot.class']();
+    $container->set('security.debug.toolbar.extension', function($c) {
+        return new $c['security.debug.toolbar.extension.class']($c->get('security'));
+    });
+
+    $container->set('security.listener.request', function($c) {
+        return new $c['security.listener.request.class']();
     });
 
     $container->set('security', function($c) {
         $security = new $c['security.class']();
-        $security->setProvider($c->get('security.aegis.provider.delegating'));
+        $security->setAuthenticator($c->get('security.aegis.authenticator.delegating'));
         $security->setStorage($c->get('security.aegis.storage.session'));
 
         return $security;
-    });
-
-
-    // Extensions
-    $container->extend('event_dispatcher', function($dispatcher, $c) {
-        $dispatcher->addListener(KernelEvents::BOOT, [$c->get('security.listener.boot'), 'onBoot']);
-
-        return $dispatcher;
-    });
-
-    $container->extend('security.aegis.provider.delegating', function($provider, $c) {
-        $provider->addProvider(new \Aegis\Authentication\Provider\FakeUserProvider($c->get('request')));
-
-        return $provider;
     });
 };

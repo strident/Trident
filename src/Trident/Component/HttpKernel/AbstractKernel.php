@@ -19,6 +19,7 @@ use Trident\Component\Configuration\Configuration;
 use Trident\Component\HttpFoundation\Request;
 use Trident\Component\HttpKernel\Event\FilterControllerEvent;
 use Trident\Component\HttpKernel\Event\FilterExceptionEvent;
+use Trident\Component\HttpKernel\Event\FilterRequestEvent;
 use Trident\Component\HttpKernel\Event\FilterResponseEvent;
 use Trident\Component\HttpKernel\Event\InterceptResponseEvent;
 use Trident\Component\HttpKernel\Event\PostBootEvent;
@@ -102,17 +103,24 @@ abstract class AbstractKernel implements HttpKernelInterface
 
         if (false === $this->booted) {
             $this->boot();
+
+            // Only fire this when handling a request
+            $event = new PostBootEvent($this, $this->request, self::MASTER_REQUEST);
+            $this->getDispatcher()->dispatch(KernelEvents::BOOT, $event);
         }
 
         // Attach the current application session to the current request
         $this->request->setSession($this->getSession());
 
         $event = new InterceptResponseEvent($this, $request, $type);
-        $this->getDispatcher()->dispatch(KernelEvents::REQUEST, $event);
+        $this->getDispatcher()->dispatch(KernelEvents::POSTBOOT, $event);
 
         if ($event->hasResponse()) {
             return $event->getResponse();
         }
+
+        $event = new FilterRequestEvent($this, $request, $type);
+        $this->getDispatcher()->dispatch(KernelEvents::REQUEST, $event);
 
         // Match the route to a controller
         $matched  = $this->matchRoute($request, $type);
@@ -257,13 +265,14 @@ abstract class AbstractKernel implements HttpKernelInterface
         } catch (\Exception $e) {
             $this->setSafeMode(true);
 
+            // Attempt to boot in safe mode to allow the application to properly
+            // handle the exception - if possible.
+            $this->boot();
+
             throw $e;
         }
 
         $this->booted = true;
-
-        $event = new PostBootEvent($this, $this->request, self::MASTER_REQUEST);
-        $this->getDispatcher()->dispatch(KernelEvents::BOOT, $event);
     }
 
     /**
@@ -434,6 +443,7 @@ abstract class AbstractKernel implements HttpKernelInterface
     protected function initialiseModules()
     {
         $this->modules = array();
+        $exceptions = array();
 
         foreach ($this->registerModules($this->environment) as $module) {
             if ($this->isSafeMode() && ! $module->isCoreModule()) {
@@ -446,10 +456,14 @@ abstract class AbstractKernel implements HttpKernelInterface
                 throw new \LogicException(sprintf('Trying to register two modules with the same name "%s"', $name));
             }
 
-            // Attempt to boot the module
             $module->boot($this->getContainer());
 
             $this->modules[$module->getName()] = $module;
+        }
+
+        // Go through registered modules and execute post-boot actions
+        foreach ($this->modules as $module) {
+            $module->postBoot($this->getContainer());
         }
 
         return $this->modules;
