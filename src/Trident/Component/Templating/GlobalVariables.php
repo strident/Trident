@@ -55,6 +55,21 @@ class GlobalVariables
         return $this->container['kernel.debug'];
     }
 
+    /**
+     * Get application safe mode.
+     *
+     * @return boolean
+     */
+    public function getSafeMode()
+    {
+        return $this->container->get('kernel')->isSafeMode();
+    }
+
+    /**
+     * Get application environment.
+     *
+     * @return string
+     */
     public function getEnvironment()
     {
         return $this->container['kernel.environment'];

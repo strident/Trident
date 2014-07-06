@@ -15,7 +15,11 @@
         <span class="trt-label">{{ app.environment }}</span>
     </div>
     <div class="trt-panel-item">
-        <strong>Is debug?</strong>
+        <strong>Is in debug mode?</strong>
         <span>{{ app.debug ? 'Yes' : 'No' }}</span>
+    </div>
+    <div class="trt-panel-item">
+        <strong>Is in safe mode?</strong>
+        <span>{{ app.safeMode ? 'Yes' : 'No' }}</span>
     </div>
 {% endblock %}
