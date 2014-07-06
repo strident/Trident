@@ -5,7 +5,6 @@ return function($container) {
     $container['templating.assetic.asset_manager.class']  = 'Assetic\\AssetManager';
     $container['templating.assetic.factory.class']        = 'Assetic\\Factory\\AssetFactory';
     $container['templating.assetic.filter_manager.class'] = 'Assetic\\FilterManager';
-    $container['templating.assetic.twig_extension.class'] = 'Assetic\\Extension\\Twig\\AsseticExtension';
     $container['templating.engine.delegating.class']      = 'Trident\\Component\\Templating\\Engine\\DelegatingEngine';
     $container['templating.engine.twig.class']            = 'Trident\\Component\\Templating\\Engine\\TwigEngine';
     $container['templating.engine_factory.class']         = 'Trident\\Component\\Templating\\Engine\\EngineFactory';

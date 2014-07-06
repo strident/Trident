@@ -68,6 +68,9 @@ abstract class AbstractKernel implements HttpKernelInterface
         $this->name        = $this->getName();
         $this->rootDir     = $this->getRootDir();
         $this->startTime   = microtime(true);
+
+        // Create a 'base' request, mainly for CLI
+        $this->request = new Request();
     }
 
     /**
