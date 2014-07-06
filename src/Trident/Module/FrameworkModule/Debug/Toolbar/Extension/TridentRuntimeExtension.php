@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Trident\Module\DebugModule\Toolbar\Extension;
+namespace Trident\Module\FrameworkModule\Debug\Toolbar\Extension;
 
 use Trident\Component\Debug\Toolbar\Extension\AbstractExtension;
 use Trident\Component\HttpKernel\AbstractKernel;
