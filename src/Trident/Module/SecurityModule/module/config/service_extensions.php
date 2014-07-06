@@ -15,4 +15,10 @@ return function($container) {
 
         return $dispatcher;
     });
+
+    $container->extend('security.aegis.authorization_manager', function($authorizationManager, $c) {
+        $authorizationManager->addVoter($c->get('security.aegis.authorization.voter.role'));
+
+        return $authorizationManager;
+    });
 };
