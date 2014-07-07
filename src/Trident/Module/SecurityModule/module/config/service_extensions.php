@@ -8,7 +8,7 @@ return function($container) {
         $toolbar->addExtension($c->get('security.debug.toolbar.extension'));
 
         return $toolbar;
-    });
+    }, false);
 
     $container->extend('event_dispatcher', function($dispatcher, $c) {
         $dispatcher->addListener(KernelEvents::REQUEST, [$c->get('security.listener.request'), 'onRequest']);

@@ -10,5 +10,5 @@ return function($container) {
         $toolbar->addExtension($c->get('debug.toolbar.extension.caching'));
 
         return $toolbar;
-    });
+    }, false);
 };
