@@ -22,6 +22,17 @@ class WelcomeController
 {
     public function indexAction()
     {
-        return new Response("Welcome to Trident.");
+        return new Response(<<<EOF
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trident</title>
+</head>
+<body>
+    <p>Welcome to Trident.</p>
+</body>
+</html>
+EOF
+);
     }
 }
