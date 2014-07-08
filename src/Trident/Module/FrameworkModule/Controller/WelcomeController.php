@@ -23,8 +23,6 @@ class WelcomeController extends Controller
 {
     public function indexAction()
     {
-        $this->get('doctrine.orm.entity_manager');
-
         return new Response(<<<EOF
 <!DOCTYPE html>
 <html>
