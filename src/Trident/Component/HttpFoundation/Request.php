@@ -27,15 +27,17 @@ class Request extends BaseRequest
      */
     public function getPath()
     {
-        $rawQuery = $this->query->all();
+        // $rawQuery = $this->query->all();
 
-        $path  = array_shift($rawQuery);
-        $query = http_build_query($rawQuery);
+        // $path  = array_shift($rawQuery);
+        // $query = http_build_query($rawQuery);
 
-        if ('' !== $query) {
-            $query = '?'.$query;
-        }
+        // if ('' !== $query) {
+        //     $query = '?'.$query;
+        // }
 
-        return $path.$query;
+        // return $path.$query;
+
+        return $this->getPathInfo();
     }
 }

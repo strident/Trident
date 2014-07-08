@@ -204,13 +204,12 @@ abstract class AbstractKernel implements HttpKernelInterface
      */
     protected function matchRoute(Request $request, $type)
     {
-        $matcher = $this->container->get('route_matcher');
+        $matcher = $this->container->get('url_matcher');
 
         if ( ! $request->attributes->has('_controller')) {
             try {
                 // Attempt to find the route from the request
-                $path    = parse_url($request->query->get('_url'), PHP_URL_PATH);
-                $matched = $matcher->match($path);
+                $matched = $matcher->match($request->getPathInfo());
             } catch (ResourceNotFoundException $e) {
                 // If no route is found, throw handle a 404 exception
                 throw new NotFoundHttpException(sprintf(
