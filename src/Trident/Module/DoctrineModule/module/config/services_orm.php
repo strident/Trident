@@ -12,7 +12,16 @@ return function($container) {
     $container->set('doctrine.annotations.driver', function($c) {
         $reader = $c->get('doctrine.annotations.reader');
 
-        return new $c['doctrine.annotations.driver.class']($reader, []);
+        $paths = [];
+        foreach ($c->get('kernel')->getModules() as $module) {
+            $path = $module->getRootDir().'/Data/Entity';
+
+            if (file_exists($path) && is_dir($path)) {
+                $paths[] = $path;
+            }
+        }
+
+        return new $c['doctrine.annotations.driver.class']($reader, $paths);
     });
 
     $container->set('doctrine.annotations.reader', function($c) {
@@ -37,7 +46,7 @@ return function($container) {
         $appConfig = $c->get('configuration');
 
         return $c['doctrine.orm.entity_manager.class']::create([
-            'driver'   => 'pdo_mysql',
+            'driver'   => $appConfig->get('database.default.driver', 'pdo_mysql'),
             'user'     => $appConfig->get('database.default.username'),
             'password' => $appConfig->get('database.default.password'),
             'dbname'   => $appConfig->get('database.default.database'),

@@ -11,17 +11,40 @@
 
 namespace Trident\Module\DoctrineModule;
 
+use Doctrine\Common\ClassLoader;
 use Phimple\Container;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Routing\RouteCollection;
 use Trident\Component\HttpKernel\Module\AbstractModule;
+use Trident\Component\HttpKernel\Module\ConsoleModuleInterface;
 
 /**
  * Doctrine Module
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class TridentDoctrineModule extends AbstractModule
+class TridentDoctrineModule extends AbstractModule implements ConsoleModuleInterface
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function registerCommands(Application $application)
+    {
+        $conn = $application->getKernel()->getContainer()->get('doctrine.dbal.connection');
+        $em   = $application->getKernel()->getContainer()->get('doctrine.orm.entity_manager');
+
+        $helperSet = $application->getHelperSet();
+        $helperSet->set(new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($conn), 'connection');
+        $helperSet->set(new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($em), 'em');
+
+        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand());
+        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand());
+        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand());
+        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand());
+        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand());
+        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand());
+    }
+
     /**
      * {@inheritDoc}
      */

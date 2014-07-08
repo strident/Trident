@@ -12,16 +12,19 @@
 namespace Trident\Module\FrameworkModule\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Trident\Module\FrameworkModule\Controller\Controller;
 
 /**
  * Welcome Controller
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class WelcomeController
+class WelcomeController extends Controller
 {
     public function indexAction()
     {
+        $this->get('doctrine.orm.entity_manager');
+
         return new Response(<<<EOF
 <!DOCTYPE html>
 <html>
