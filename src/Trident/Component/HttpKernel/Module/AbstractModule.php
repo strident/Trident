@@ -38,7 +38,7 @@ abstract class AbstractModule
      *
      * @param Container $container
      */
-    abstract public function registerServices(Container $continer);
+    abstract public function registerServices(Container $container);
 
     /**
      * Register module service extensions in the container
