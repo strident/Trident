@@ -50,13 +50,20 @@ class AssetExtension extends \Twig_Extension
     public function asset($asset, $version = null)
     {
         $host = $this->request->getHost();
+        $port = $this->request->getPort();
         $path = $this->request->getBasePath();
 
         if ('/' !== substr($asset, 1)) {
             $asset = '/'.$asset;
         }
 
-        return '//'.$host.$path.$asset;
+        if (80 === $port) {
+            $port = '';
+        } else {
+            $port = ':'.$port;
+        }
+
+        return '//'.$host.$port.$path.$asset;
     }
 
     /**
