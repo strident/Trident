@@ -28,10 +28,9 @@ class TwigEngine implements EngineInterface
      * @param Twig_LoaderInterface $loader
      * @param array                $options
      */
-    public function __construct(\Twig_LoaderInterface $loader, array $options)
+    public function __construct(\Twig_Environment $environment)
     {
-        $this->environment = new \Twig_Environment($loader, $options);
-        $this->environment->addExtension(new \Twig_Extension_Debug());
+        $this->environment = $environment;
     }
 
     /**

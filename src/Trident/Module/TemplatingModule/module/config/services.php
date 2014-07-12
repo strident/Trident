@@ -2,16 +2,17 @@
 
 return function($container) {
     // Parameters
-    $container['templating.assetic.asset_manager.class']  = 'Assetic\\AssetManager';
-    $container['templating.assetic.factory.class']        = 'Assetic\\Factory\\AssetFactory';
-    $container['templating.assetic.filter_manager.class'] = 'Assetic\\FilterManager';
-    $container['templating.engine.delegating.class']      = 'Trident\\Component\\Templating\\Engine\\DelegatingEngine';
-    $container['templating.engine.twig.class']            = 'Trident\\Component\\Templating\\Engine\\TwigEngine';
-    $container['templating.engine_factory.class']         = 'Trident\\Component\\Templating\\Engine\\EngineFactory';
-    $container['templating.file_loader.twig.class']       = 'Trident\\Component\\Templating\\Loader\\TwigFileLoader';
-    $container['templating.global_variables.class']       = 'Trident\\Component\\Templating\\GlobalVariables';
-    $container['templating.name_resolver.class']          = 'Trident\\Component\\Templating\\TemplateNameResolver';
-    $container['templating.class']                        = 'Trident\\Component\\Templating\\Templating';
+    $container['templating.assetic.asset_manager.class']   = 'Assetic\\AssetManager';
+    $container['templating.assetic.factory.class']         = 'Assetic\\Factory\\AssetFactory';
+    $container['templating.assetic.filter_manager.class']  = 'Assetic\\FilterManager';
+    $container['templating.engine.delegating.class']       = 'Trident\\Component\\Templating\\Engine\\DelegatingEngine';
+    $container['templating.engine.twig.environment.class'] = 'Twig_Environment';
+    $container['templating.engine.twig.class']             = 'Trident\\Component\\Templating\\Engine\\TwigEngine';
+    $container['templating.engine_factory.class']          = 'Trident\\Component\\Templating\\Engine\\EngineFactory';
+    $container['templating.file_loader.twig.class']        = 'Trident\\Component\\Templating\\Loader\\TwigFileLoader';
+    $container['templating.global_variables.class']        = 'Trident\\Component\\Templating\\GlobalVariables';
+    $container['templating.name_resolver.class']           = 'Trident\\Component\\Templating\\TemplateNameResolver';
+    $container['templating.class']                         = 'Trident\\Component\\Templating\\Templating';
 
 
     // Services
@@ -43,12 +44,16 @@ return function($container) {
         return $engine;
     });
 
-    $container->set('templating.engine.twig', function($c) {
-        return new $c['templating.engine.twig.class']($c->get('templating.file_loader.twig'), [
+    $container->set('templating.engine.twig.environment', function($c) {
+        return new $c['templating.engine.twig.environment.class']($c->get('templating.file_loader.twig'), [
             'cache'            => $c['kernel.debug'] ? false : $c->get('configuration')->get('twig.cache_dir'),
             'debug'            => $c['kernel.debug'],
             'strict_variables' => true
         ]);
+    });
+
+    $container->set('templating.engine.twig', function($c) {
+        return new $c['templating.engine.twig.class']($c->get('templating.engine.twig.environment'));
     });
 
     $container->set('templating.engine_factory', function($c) {

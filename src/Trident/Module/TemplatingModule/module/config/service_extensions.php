@@ -7,14 +7,13 @@ return function($container) {
 
 
     // Extensions
-    $container->extend('templating.engine.twig', function($twig, $c) {
-        $environment = $twig->getEnvironment();
+    $container->extend('templating.engine.twig.environment', function($environment, $c) {
         $environment->addExtension(new $c['templating.engine.twig.extension.assetic.class']($c->get('templating.assetic.factory')));
         $environment->addExtension(new $c['templating.engine.twig.extension.asset.class']($c->get('request')));
 
         // Add global variables
         $environment->addGlobal('app', $c->get('templating.global_variables'));
 
-        return $twig;
+        return $environment;
     });
 };
