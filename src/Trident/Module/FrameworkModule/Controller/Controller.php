@@ -21,9 +21,45 @@ use Trident\Component\DependencyInjection\ContainerAware;
  */
 class Controller extends ContainerAware
 {
+    /**
+     * Render a template
+     *
+     * @param string   $view
+     * @param array    $parameters
+     * @param Response $response
+     *
+     * @return Response
+     */
     public function render($view, array $parameters = null, Response $response = null)
     {
         return $this->container->get('templating')->render($view, $parameters, $response);
+    }
+
+    /**
+     * Generates a URL from the given parameters.
+     *
+     * @param string $route
+     * @param mixed  $parameters
+     * @param mixed  $referenceType
+     *
+     * @return string
+     */
+    public function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    {
+        return $this->container->get('router')->generate($route, $parameters, $referenceType);
+    }
+
+    /**
+     * Returns a RedirectResponse to the given URL with the given status code
+     *
+     * @param string  $url
+     * @param integer $status
+     *
+     * @return RedirectResponse
+     */
+    public function redirect($url, $status = 302)
+    {
+        return new RedirectResponse($url, $status);
     }
 
     /**
@@ -36,5 +72,17 @@ class Controller extends ContainerAware
     public function get($name)
     {
         return $this->container->get($name);
+    }
+
+    /**
+     * True if the container has the given service
+     *
+     * @param string $name
+     *
+     * @return boolean
+     */
+    public function has($name)
+    {
+        return $this->container->has($name);
     }
 }

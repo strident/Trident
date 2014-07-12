@@ -27,13 +27,6 @@ abstract class AbstractModule
     protected $name;
 
     /**
-     * Register module routes in the application
-     *
-     * @param RouteCollection $collection
-     */
-    abstract public function registerRoutes(RouteCollection $collection);
-
-    /**
      * Register module services in the container
      *
      * @param Container $container
@@ -55,7 +48,6 @@ abstract class AbstractModule
     public function boot(Container $container)
     {
         $this->registerServices($container);
-        $this->registerRoutes($container->get('route_collection'));
     }
 
     /**
