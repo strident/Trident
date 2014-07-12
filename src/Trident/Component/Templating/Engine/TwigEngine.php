@@ -11,7 +11,6 @@
 
 namespace Trident\Component\Templating\Engine;
 
-use Trident\Component\Templating\Loader\TwigFileLoader;
 use Trident\Component\Templating\TemplateReferenceInterface;
 
 /**
@@ -26,10 +25,10 @@ class TwigEngine implements EngineInterface
     /**
      * Constructor.
      *
-     * @param TwigFileLoader $loader
-     * @param array          $options
+     * @param Twig_LoaderInterface $loader
+     * @param array                $options
      */
-    public function __construct(TwigFileLoader $loader, array $options)
+    public function __construct(\Twig_LoaderInterface $loader, array $options)
     {
         $this->environment = new \Twig_Environment($loader, $options);
         $this->environment->addExtension(new \Twig_Extension_Debug());
