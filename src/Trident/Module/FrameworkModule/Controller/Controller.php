@@ -12,6 +12,8 @@
 namespace Trident\Module\FrameworkModule\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Trident\Component\DependencyInjection\ContainerAware;
 
 /**
@@ -44,7 +46,7 @@ class Controller extends ContainerAware
      *
      * @return string
      */
-    public function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    public function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
         return $this->container->get('router')->generate($route, $parameters, $referenceType);
     }

@@ -27,7 +27,7 @@ return function($container) {
         $context = new $c['request_context.class']();
         $context->fromRequest($c->get('request'));
 
-        return new $c['request_context.class']();
+        return $context;
     });
 
     $container->set('router', function($c) {

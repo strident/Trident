@@ -7,6 +7,8 @@ return function($container) {
 
     // Services
     $container->set('validator', function($c) {
-        return $c['validation.class']::createValidator();
+        return $c['validation.class']::createValidatorBuilder()
+            ->enableAnnotationMapping()
+            ->getValidator();
     });
 };
