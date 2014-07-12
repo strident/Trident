@@ -14,9 +14,9 @@
     "require": {
         "php": ">=5.5.3",
         "doctrine/common": "2.4.2",
-        "doctrine/dbal": "2.4.2",
+        "doctrine/dbal": "2.5.*@dev",
         "doctrine/migrations": "1.0.*@dev",
-        "doctrine/orm": "2.4.2",
+        "doctrine/orm": "2.5.*@dev",
         "kriswallsmith/assetic": "1.1.*",
         "psr/log": "~1.0",
         "strident/aegis": "1.0.0-alpha",
