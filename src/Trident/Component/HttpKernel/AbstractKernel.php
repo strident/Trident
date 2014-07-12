@@ -49,12 +49,12 @@ abstract class AbstractKernel implements HttpKernelInterface
     protected $session;
     protected $startTime;
 
-    const VERSION         = '1.0.3-alpha5';
-    const VERSION_ID      = '10003';
+    const VERSION         = '1.0.4-alpha';
+    const VERSION_ID      = '10004';
     const MAJOR_VERSION   = '1';
     const MINOR_VERSION   = '0';
-    const RELEASE_VERSION = '3';
-    const EXTRA_VERSION   = 'alpha5';
+    const RELEASE_VERSION = '4';
+    const EXTRA_VERSION   = 'alpha';
 
     /**
      * Constructor.
