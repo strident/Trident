@@ -10,6 +10,7 @@ return function($container) {
     $container->extend('templating.engine.twig.environment', function($environment, $c) {
         $environment->addExtension(new $c['templating.engine.twig.extension.assetic.class']($c->get('templating.assetic.factory')));
         $environment->addExtension(new $c['templating.engine.twig.extension.asset.class']($c->get('request')));
+        $environment->addExtension($c->get('templating.engine.twig.forms.form_extension'));
 
         // Add global variables
         $environment->addGlobal('app', $c->get('templating.global_variables'));

@@ -49,15 +49,19 @@ class TridentFrameworkModule extends AbstractModule implements ConsoleModuleInte
      */
     public function registerServices(Container $container)
     {
-        $services = require __DIR__.'/module/config/services.php';
-        $cache    = require __DIR__.'/module/config/services_cache.php';
-        $debug    = require __DIR__.'/module/config/services_debug.php';
-        $error    = require __DIR__.'/module/config/services_error.php';
+        $services   = require __DIR__.'/module/config/services.php';
+        $cache      = require __DIR__.'/module/config/services_cache.php';
+        $debug      = require __DIR__.'/module/config/services_debug.php';
+        $error      = require __DIR__.'/module/config/services_error.php';
+        $form       = require __DIR__.'/module/config/services_form.php';
+        $validation = require __DIR__.'/module/config/services_validation.php';
 
         call_user_func($services, $container);
         call_user_func($cache, $container);
         call_user_func($debug, $container);
         call_user_func($error, $container);
+        call_user_func($form, $container);
+        call_user_func($validation, $container);
     }
 
     /**

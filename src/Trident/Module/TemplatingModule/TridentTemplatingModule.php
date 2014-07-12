@@ -38,8 +38,10 @@ class TridentTemplatingModule extends AbstractModule
     public function registerServices(Container $container)
     {
         $services = require __DIR__.'/module/config/services.php';
+        $form     = require __DIR__.'/module/config/services_form.php';
 
         call_user_func($services, $container);
+        call_user_func($form, $container);
     }
 
     /**

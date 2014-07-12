@@ -25,8 +25,12 @@
         "symfony/event-dispatcher": "2.5.*",
         "symfony/filesystem": "2.5.*",
         "symfony/finder": "2.5.*",
+        "symfony/form": "2.5.*",
         "symfony/http-foundation": "2.5.*",
         "symfony/routing": "2.5.*",
+        "symfony/security-csrf": "2.5.*",
+        "symfony/twig-bridge": "2.5.*",
+        "symfony/validator": "2.5.*",
         "twig/twig": "1.15.*"
     },
     "autoload": {
