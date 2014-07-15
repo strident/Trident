@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Trident\Component\Configuration\Configuration;
 use Trident\Component\HttpFoundation\Request;
+use Trident\Component\HttpFoundation\RequestStack;
 use Trident\Component\HttpKernel\Event\FilterControllerEvent;
 use Trident\Component\HttpKernel\Event\FilterExceptionEvent;
 use Trident\Component\HttpKernel\Event\FilterRequestEvent;
@@ -44,17 +45,18 @@ abstract class AbstractKernel implements HttpKernelInterface
     protected $modules;
     protected $name;
     protected $request;
+    protected $requestStack;
     protected $rootDir;
     protected $safeMode = false;
     protected $session;
     protected $startTime;
 
-    const VERSION         = '1.0.5-alpha5';
+    const VERSION         = '1.0.5-alpha6';
     const VERSION_ID      = '10005';
     const MAJOR_VERSION   = '1';
     const MINOR_VERSION   = '0';
     const RELEASE_VERSION = '5';
-    const EXTRA_VERSION   = 'alpha5';
+    const EXTRA_VERSION   = 'alpha6';
 
     /**
      * Constructor.
@@ -71,6 +73,7 @@ abstract class AbstractKernel implements HttpKernelInterface
 
         // Create a 'base' request, mainly for CLI
         $this->request = new Request();
+        $this->requestStack = new RequestStack();
     }
 
     /**
@@ -103,6 +106,7 @@ abstract class AbstractKernel implements HttpKernelInterface
     protected function handleRequest(Request $request, $type)
     {
         $this->request = $request;
+        $this->requestStack->push($request);
 
         if (false === $this->booted) {
             $this->boot();
@@ -558,6 +562,7 @@ abstract class AbstractKernel implements HttpKernelInterface
         $container->set('kernel', $this);
         $container->set('configuration', $this->configuration);
         $container->set('request', $this->request);
+        $container->set('request_stack', $this->requestStack);
         $container->set('session', $this->session);
     }
 
