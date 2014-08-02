@@ -31,18 +31,6 @@ class TridentDoctrineModule extends AbstractModule implements ConsoleModuleInter
     public function registerCommands(Application $application)
     {
         $conn = $application->getKernel()->getContainer()->get('doctrine.dbal.connection');
-        $em   = $application->getKernel()->getContainer()->get('doctrine.orm.entity_manager');
-
-        $helperSet = $application->getHelperSet();
-        $helperSet->set(new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($conn), 'connection');
-        $helperSet->set(new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($em), 'em');
-
-        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand());
-        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand());
-        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand());
-        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand());
-        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand());
-        $application->add(new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand());
     }
 
     /**
