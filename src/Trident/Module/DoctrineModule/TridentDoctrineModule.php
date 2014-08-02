@@ -11,12 +11,12 @@
 
 namespace Trident\Module\DoctrineModule;
 
-use Doctrine\Common\ClassLoader;
 use Phimple\Container;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Routing\RouteCollection;
 use Trident\Component\HttpKernel\Module\AbstractModule;
 use Trident\Component\HttpKernel\Module\ConsoleModuleInterface;
+use Trident\Module\DoctrineModule\Console\Command\MigrationsStatusCommand;
 
 /**
  * Doctrine Module
@@ -31,6 +31,8 @@ class TridentDoctrineModule extends AbstractModule implements ConsoleModuleInter
     public function registerCommands(Application $application)
     {
         $conn = $application->getKernel()->getContainer()->get('doctrine.dbal.connection');
+
+        $application->add(new MigrationsStatusCommand($conn));
     }
 
     /**
