@@ -47,6 +47,7 @@ return function($container) {
 
         return $c['doctrine.orm.entity_manager.class']::create([
             'driver'   => $appConfig->get('database.default.driver', 'pdo_mysql'),
+            'host'     => $appConfig->get('database.default.host'),
             'user'     => $appConfig->get('database.default.username'),
             'password' => $appConfig->get('database.default.password'),
             'dbname'   => $appConfig->get('database.default.database'),
