@@ -12,39 +12,16 @@
 namespace Trident\Module\DoctrineModule;
 
 use Phimple\Container;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Routing\RouteCollection;
 use Trident\Component\HttpKernel\Module\AbstractModule;
-use Trident\Component\HttpKernel\Module\ConsoleModuleInterface;
-use Trident\Module\DoctrineModule\Console\Command\MigrationsStatusCommand;
 
 /**
  * Doctrine Module
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class TridentDoctrineModule extends AbstractModule implements ConsoleModuleInterface
+class TridentDoctrineModule extends AbstractModule
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function registerCommands(Application $application)
-    {
-        $conn = $application->getKernel()->getContainer()->get('doctrine.dbal.connection');
-
-        $application->add(new MigrationsStatusCommand($conn));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function registerRoutes(RouteCollection $collection)
-    {
-        $routes = require __DIR__.'/module/config/routes.php';
-
-        call_user_func($routes, $collection);
-    }
-
     /**
      * {@inheritDoc}
      */

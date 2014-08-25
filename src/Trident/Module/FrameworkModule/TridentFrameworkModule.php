@@ -38,15 +38,6 @@ class TridentFrameworkModule extends AbstractModule implements ConsoleModuleInte
     /**
      * {@inheritDoc}
      */
-    public function registerRoutes(RouteCollection $collection)
-    {
-        $routes = require __DIR__.'/module/config/routes.php';
-        call_user_func($routes, $collection);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function registerServices(Container $container)
     {
         $services   = require __DIR__.'/module/config/services.php';
