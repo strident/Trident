@@ -19,7 +19,7 @@
         "kriswallsmith/assetic": "1.1.*",
         "psr/log": "~1.0",
         "robmorgan/phinx": "0.3.7",
-        "strident/aegis": "1.0.0-alpha3",
+        "strident/aegis": "1.0.0-alpha4",
         "strident/phimple": "2.0.1",
         "symfony/console": "2.5.*",
         "symfony/event-dispatcher": "2.5.*",
