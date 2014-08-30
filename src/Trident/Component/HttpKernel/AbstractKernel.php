@@ -51,12 +51,12 @@ abstract class AbstractKernel implements HttpKernelInterface
     protected $session;
     protected $startTime;
 
-    const VERSION         = '1.0.6-alpha2';
+    const VERSION         = '1.0.6-alpha3';
     const VERSION_ID      = '10006';
     const MAJOR_VERSION   = '1';
     const MINOR_VERSION   = '0';
     const RELEASE_VERSION = '6';
-    const EXTRA_VERSION   = 'alpha2';
+    const EXTRA_VERSION   = 'alpha3';
 
     /**
      * Constructor.
@@ -141,16 +141,8 @@ abstract class AbstractKernel implements HttpKernelInterface
         $event->setArguments($arguments);
         $this->getDispatcher()->dispatch(KernelEvents::CONTROLLER, $event);
 
-        if (method_exists($controller, 'preAction')) {
-            $controller->preAction();
-        }
-
         // Attempt to get a response from the controller
         $response = call_user_func_array($controller, $arguments);
-
-        if (method_exists($controller, 'postAction')) {
-            $controller->postAction();
-        }
 
         if ( ! $response instanceof Response) {
             $message = sprintf('The controller must return a valid Response (%s given).', $this->varToString($response));

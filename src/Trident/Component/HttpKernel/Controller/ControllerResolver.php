@@ -76,11 +76,16 @@ class ControllerResolver
 
         list($class, $method) = explode('::', $controller, 2);
 
-        if (!class_exists($class)) {
-            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+        if ($this->container->has($class)) {
+            $controller = $this->container->get($class);
+        } else {
+            if ( ! class_exists($class)) {
+                throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+            }
+
+            $controller = new $class();
         }
 
-        $controller = new $class();
         if ($controller instanceof ContainerAwareInterface) {
             $controller->setContainer($this->container);
         }
